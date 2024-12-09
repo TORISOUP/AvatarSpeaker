@@ -12,7 +12,7 @@ namespace AvatarSpeaker.Core
     {
         UniTask<T> Visit(LocalSpeakerSource source, CancellationToken ct);
     }
-    
+
     public readonly struct LocalSpeakerSource : ISpeakerSource
     {
         public string Path { get; }
@@ -23,5 +23,10 @@ namespace AvatarSpeaker.Core
         }
 
         public UniTask<T> Accept<T>(ISpeakerSourceVisitor<T> visitor, CancellationToken ct) => visitor.Visit(this, ct);
+
+        public override string ToString()
+        {
+            return $"{nameof(Path)}: {Path}";
+        }
     }
 }

@@ -193,6 +193,13 @@
       },
       "hash": "264a6bcf7897082ad381a1bccffb31c25f10cab2"
     },
+    "com.yasirkula.simplefilebrowser": {
+      "version": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "07398a29da28adc0f074b5a364e5f209cf20285e"
+    },
     "jp.hadashikick.vcontainer": {
       "version": "https://github.com/hadashiA/VContainer.git?path=VContainer/Assets/VContainer#1.16.6",
       "depth": 0,

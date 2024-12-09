@@ -11,3 +11,4 @@ namespace AvatarSpeaker.Core
         public abstract void Dispose();
     }
 }
+

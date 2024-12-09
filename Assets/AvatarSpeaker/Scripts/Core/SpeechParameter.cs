@@ -20,6 +20,16 @@ namespace AvatarSpeaker.Core
             PitchScale = pitchScale;
             VolumeScale = volumeScale;
         }
+        
+        public SpeechParameter(string text)
+        {
+            Text = text;
+            Style = new SpeechStyle(0, "Default");
+            SpeedScale = 1.0f;
+            PitchScale = 1.0f;
+            VolumeScale = 1.0f;
+        }
+
 
 
         public bool Equals(SpeechParameter other)
