@@ -5,6 +5,9 @@ namespace AvatarSpeaker.Core
 {
     public interface ISpeakerSourceProvider
     {
-        UniTask<ISpeakerSource> GetSpeakerSourcesAsync(CancellationToken ct);
+        /// <summary>
+        /// 使用可能なSpeakerSourceを一覧で取得する
+        /// </summary>
+        UniTask<ISpeakerSource[]> GetSpeakerSourcesAsync(CancellationToken ct);
     }
 }

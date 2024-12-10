@@ -15,6 +15,9 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
 {
     public class VoicevoxVrmSpeaker : Speaker
     {
+        // GameObjectのIDをSpeakerのIDとして利用
+        public sealed override string Id { protected set; get; }
+
         private readonly GameObject _vrmGameObject;
         private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
@@ -22,9 +25,12 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
         private readonly Subject<(ValueTask<SynthesisResult>, AutoResetUniTaskCompletionSource, CancellationToken)>
             _speechRegisterSubject =
                 new();
-        
+
         public VoicevoxVrmSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
         {
+            // SpeakerのIDを設定
+            Id = $"voicevox_vrm_{vrm10Instance.gameObject.GetInstanceID().ToString()}";
+
             _voicevoxSynthesizerProvider = synthesizerProvider;
             _vrmGameObject = vrm10Instance.gameObject;
             var audioSource = _vrmGameObject.AddComponent<AudioSource>();
@@ -33,7 +39,7 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
             var voicevoxSpeakPlayer = _vrmGameObject.AddComponent<VoicevoxSpeakPlayer>();
             voicevoxSpeakPlayer.AudioSource = audioSource;
             voicevoxSpeakPlayer.AddOptionalVoicevoxPlayer(lipSync);
-            
+
             // 音声合成のタスクが流れてくる
             _speechRegisterSubject
                 .SubscribeAwait(async (values, ct) =>
@@ -55,7 +61,8 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
                     {
                         autoResetUniTaskCompletionSource.TrySetException(e);
                     }
-                }).RegisterTo(_cancellationTokenSource.Token);
+                })
+                .RegisterTo(_cancellationTokenSource.Token);
         }
 
 
@@ -65,7 +72,7 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
             var synthesiser = _voicevoxSynthesizerProvider.Current.CurrentValue;
-            
+
             // Voicevoxの音声合成を開始
             var task = synthesiser.SynthesizeSpeechAsync(
                 text: speechParameter.Text,
@@ -77,7 +84,7 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
 
             // Observableを非同期処理を行えるQueueとして利用
             _speechRegisterSubject.OnNext((task, autoResetUniTaskCompletionSource, lcts.Token));
-            
+
             // 読み上げが完了するまで待機
             await autoResetUniTaskCompletionSource.Task;
         }
