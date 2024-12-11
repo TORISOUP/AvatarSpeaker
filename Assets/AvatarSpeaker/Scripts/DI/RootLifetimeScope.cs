@@ -3,8 +3,9 @@ using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Configurations;
 using AvatarSpeaker.Infrastructures.RoomSpaces;
 using AvatarSpeaker.Infrastructures.SpeakerSources;
-using AvatarSpeaker.Infrastructures.Voicevoxs;
-using AvatarSpeaker.Infrastructures.VrmSpeakers;
+using AvatarSpeaker.Infrastructures.Voicevoxes;
+using AvatarSpeaker.Infrastructures.VoicevoxSpeakers;
+using AvatarSpeaker.Scripts.Externals;
 using AvatarSpeaker.UseCases;
 using VContainer;
 using VContainer.Unity;
@@ -15,6 +16,9 @@ namespace AvatarSpeaker.DI
     {
         protected override void Configure(IContainerBuilder builder)
         {
+            // External
+            builder.Register<GameObjectRepository>(Lifetime.Scoped).AsSelf().As<IDisposable>();
+            
             // SpeakerSource
             builder.Register<LocalSpeakerSourceProvider>(Lifetime.Scoped)
                 .As<ISpeakerSourceProvider, IDisposable>();
@@ -28,7 +32,7 @@ namespace AvatarSpeaker.DI
             builder.Register<RoomSpaceUseCase>(Lifetime.Scoped);
             
             //
-            builder.Register<VoicevoxVrmSpeakerProvider>(Lifetime.Scoped).As<ISpeakerProvider, IDisposable>();
+            builder.Register<VoicevoxSpeakerProvider>(Lifetime.Scoped).As<ISpeakerProvider, IDisposable>();
 
             
             builder.Register<CurrentConfigurationRepository>(Lifetime.Scoped)

@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AvatarSpeaker.Core;
-using AvatarSpeaker.Infrastructures.Voicevoxs;
+using AvatarSpeaker.Infrastructures.Voicevoxes;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
@@ -11,9 +11,9 @@ using VoicevoxClientSharp;
 using VoicevoxClientSharp.Unity;
 using Object = UnityEngine.Object;
 
-namespace AvatarSpeaker.Infrastructures.VrmSpeakers
+namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 {
-    public class VoicevoxVrmSpeaker : Speaker
+    public class VoicevoxSpeaker : Speaker
     {
         // GameObjectのIDをSpeakerのIDとして利用
         public sealed override string Id { protected set; get; }
@@ -26,7 +26,12 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
             _speechRegisterSubject =
                 new();
 
-        public VoicevoxVrmSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
+        /// <summary>
+        /// Dispose時に発火する
+        /// </summary>
+        public Action OnDisposed;
+
+        public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
         {
             // SpeakerのIDを設定
             Id = $"voicevox_vrm_{vrm10Instance.gameObject.GetInstanceID().ToString()}";
@@ -95,6 +100,7 @@ namespace AvatarSpeaker.Infrastructures.VrmSpeakers
             _cancellationTokenSource.Dispose();
             _speechRegisterSubject.Dispose(true);
             Object.Destroy(_vrmGameObject);
+            OnDisposed?.Invoke();
         }
     }
 }

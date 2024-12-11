@@ -4,6 +4,9 @@ using Cysharp.Threading.Tasks;
 
 namespace AvatarSpeaker.Core
 {
+    /// <summary>
+    /// 発話者の概念を表すクラス
+    /// </summary>
     public abstract class Speaker : IDisposable, IEquatable<Speaker>
     {
         public abstract string Id { protected set; get; }

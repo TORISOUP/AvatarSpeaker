@@ -4,7 +4,7 @@ using R3;
 using VoicevoxClientSharp;
 using VoicevoxClientSharp.ApiClient;
 
-namespace AvatarSpeaker.Infrastructures.Voicevoxs
+namespace AvatarSpeaker.Infrastructures.Voicevoxes
 {
     /// <summary>
     /// 現在のアプリケーション上で有効なVoicevoxSynthesizerを提供する
