@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 namespace AvatarSpeaker.Core
 {
@@ -9,8 +10,21 @@ namespace AvatarSpeaker.Core
     /// </summary>
     public abstract class Speaker : IDisposable, IEquatable<Speaker>
     {
-        public abstract string Id { protected set; get; }
+        /// <summary>
+        /// SpeakerのID
+        /// </summary>
+        public abstract string Id { get; }
+
+        /// <summary>
+        /// Speakerの顔の位置
+        /// </summary>
+        public abstract Vector3 FacePosition { get; }
+
+        /// <summary>
+        /// Speakerに発話させる
+        /// </summary>
         public abstract UniTask SpeechAsync(SpeechParameter speechParameter, CancellationToken ct);
+
 
         public abstract void Dispose();
 

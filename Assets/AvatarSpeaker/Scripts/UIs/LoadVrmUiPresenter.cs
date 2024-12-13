@@ -38,7 +38,7 @@ namespace AvatarSpeaker.UIs
         private async UniTask SelectVrmAsync(CancellationToken ct)
         {
             // メニューを無効化してSpeakerをロードする
-            using (_uiController.DisableMenuCanvasScope())
+            using (_uiController.DisableTemporaryMainUiCanvasScope())
             {
                 // 現在有効なSpeakerSourceを取得する
                 var speakerSources = await _speakerUseCase.GetAvailableSpeakerSourcesAsync(ct);

@@ -16,11 +16,25 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
     public class VoicevoxSpeaker : Speaker
     {
         // GameObjectのIDをSpeakerのIDとして利用
-        public sealed override string Id { protected set; get; }
+        public sealed override string Id { get; }
+
+        /// <summary>
+        /// 両目の中心の位置を顔の位置として利用する
+        /// </summary>
+        public override Vector3 FacePosition
+        {
+            get
+            {
+                var leftEye = _animator.GetBoneTransform(HumanBodyBones.LeftEye).position;
+                var rightEye = _animator.GetBoneTransform(HumanBodyBones.RightEye).position;
+                return (leftEye + rightEye) / 2;
+            }
+        }
 
         private readonly GameObject _vrmGameObject;
         private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
+        private readonly Animator _animator;
 
         private readonly Subject<(ValueTask<SynthesisResult>, AutoResetUniTaskCompletionSource, CancellationToken)>
             _speechRegisterSubject =
@@ -35,9 +49,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         {
             // SpeakerのIDを設定
             Id = $"voicevox_vrm_{vrm10Instance.gameObject.GetInstanceID().ToString()}";
-
+            
             _voicevoxSynthesizerProvider = synthesizerProvider;
             _vrmGameObject = vrm10Instance.gameObject;
+            _animator = _vrmGameObject.GetComponent<Animator>();
+            
             var audioSource = _vrmGameObject.AddComponent<AudioSource>();
             var lipSync = _vrmGameObject.AddComponent<VoicevoxVrmLipSyncPlayer>();
 

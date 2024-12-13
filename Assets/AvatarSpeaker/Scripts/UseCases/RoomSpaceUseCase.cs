@@ -39,12 +39,30 @@ namespace AvatarSpeaker.UseCases
             {
                 roomSpace.RemoveSpeaker(currentSpeaker.Id);
             }
-            
+
             // Speakerをロードする
             var speaker = await _speakerProvider.LoadSpeakerAsync(speakerSource, ct);
-            
+
             // 新しいSpeakerをRoomSpaceに配置する
             roomSpace.RegisterSpeaker(speaker);
+            
+            // カメラを現在のSpeakerの顔にフォーカスする
+            FocusOnCurrentSpeakerFace();
+        }
+
+        /// <summary>
+        /// RoomSpace内の現在のSpeakerの顔をカメラにフォーカスする
+        /// </summary>
+        public void FocusOnCurrentSpeakerFace()
+        {
+            var roomSpace = _roomSpaceProvider.CurrentRoomSpace;
+            var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
+            if (currentSpeaker == null)
+            {
+                return;
+            }
+
+            roomSpace.SpeakerCamera.LookAt(currentSpeaker.FacePosition);
         }
     }
 }

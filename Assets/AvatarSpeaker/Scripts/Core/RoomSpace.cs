@@ -1,7 +1,7 @@
 #nullable enable
 using System;
-using AvatarSpeaker.Core.Models;
 using R3;
+using UnityEngine;
 
 
 namespace AvatarSpeaker.Core
@@ -12,14 +12,15 @@ namespace AvatarSpeaker.Core
     public sealed class RoomSpace : IDisposable
     {
         public ReadOnlyReactiveProperty<Color> BackgroundColor => _backgroundColor;
-        private readonly ReactiveProperty<Color> _backgroundColor = new(Color.White);
+        private readonly ReactiveProperty<Color> _backgroundColor = new(Color.white);
 
         /// <summary>
         /// Speakerは1つだけ配置できる
         /// </summary>
         public ReadOnlyReactiveProperty<Speaker?> CurrentSpeaker => _currentSpeaker;
-
         private readonly ReactiveProperty<Speaker?> _currentSpeaker = new();
+        
+        public readonly SpeakerCamera SpeakerCamera = new();
 
         /// <summary>
         /// SpeakerをRoomSpaceから削除する
