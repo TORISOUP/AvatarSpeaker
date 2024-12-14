@@ -1,6 +1,8 @@
 using System.Threading;
 using AvatarSpeaker.Core;
+using AvatarSpeaker.Core.Interfaces;
 using Cysharp.Threading.Tasks;
+using R3;
 
 namespace AvatarSpeaker.UseCases
 {
@@ -10,17 +12,30 @@ namespace AvatarSpeaker.UseCases
     public sealed class RoomSpaceUseCase
     {
         private readonly IRoomSpaceProvider _roomSpaceProvider;
-        private readonly ISpeakerSourceProvider _speakerSourceProvider;
+        private readonly IRoomSpaceRegister _roomSpaceRegister;
         private readonly ISpeakerProvider _speakerProvider;
-
+        private readonly SpeakerCameraUseCase _speakerCameraUseCase;
 
         public RoomSpaceUseCase(IRoomSpaceProvider roomSpaceProvider,
-            ISpeakerSourceProvider speakerSourceProvider,
-            ISpeakerProvider speakerProvider)
+            IRoomSpaceRegister roomSpaceRegister,
+            ISpeakerProvider speakerProvider,
+            SpeakerCameraUseCase speakerCameraUseCase)
         {
             _roomSpaceProvider = roomSpaceProvider;
-            _speakerSourceProvider = speakerSourceProvider;
+            _roomSpaceRegister = roomSpaceRegister;
             _speakerProvider = speakerProvider;
+            _speakerCameraUseCase = speakerCameraUseCase;
+        }
+
+        /// <summary>
+        /// 新しいRoomSpaceを作成し、古いRoomSpaceを破棄する
+        /// </summary>
+        public void CreateNewRoomSpace()
+        {
+            // 現在のRoomSpaceを破棄して新しいRoomSpaceを作成する
+            _roomSpaceProvider.CurrentRoomSpace.CurrentValue?.Dispose();
+            var roomSpace = new RoomSpace();
+            _roomSpaceRegister.RegisterRoomSpace(roomSpace);
         }
 
         /// <summary>
@@ -31,7 +46,8 @@ namespace AvatarSpeaker.UseCases
         {
             // SpeakerをRoomSpaceに配置する
             // すでにSpeakerが配置されている場合は、そのSpeakerを削除して新しいSpeakerを配置する
-            var roomSpace = _roomSpaceProvider.CurrentRoomSpace;
+            var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
+                .FirstAsync(x => x != null, ct);
 
             // 現在のSpeakerがRoomSpaceに配置されている場合は削除する
             var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
@@ -45,24 +61,9 @@ namespace AvatarSpeaker.UseCases
 
             // 新しいSpeakerをRoomSpaceに配置する
             roomSpace.RegisterSpeaker(speaker);
-            
+
             // カメラを現在のSpeakerの顔にフォーカスする
-            FocusOnCurrentSpeakerFace();
-        }
-
-        /// <summary>
-        /// RoomSpace内の現在のSpeakerの顔をカメラにフォーカスする
-        /// </summary>
-        public void FocusOnCurrentSpeakerFace()
-        {
-            var roomSpace = _roomSpaceProvider.CurrentRoomSpace;
-            var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (currentSpeaker == null)
-            {
-                return;
-            }
-
-            roomSpace.SpeakerCamera.LookAt(currentSpeaker.FacePosition);
+            _speakerCameraUseCase.FocusOnCurrentSpeakerFace();
         }
     }
 }

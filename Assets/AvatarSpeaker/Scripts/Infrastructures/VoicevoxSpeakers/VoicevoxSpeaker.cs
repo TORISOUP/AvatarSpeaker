@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AvatarSpeaker.Core;
+using AvatarSpeaker.Cushion.VRM;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using Cysharp.Threading.Tasks;
 using R3;
@@ -13,10 +14,13 @@ using Object = UnityEngine.Object;
 
 namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 {
-    public class VoicevoxSpeaker : Speaker
+    public class VoicevoxSpeaker : VrmSpeaker
     {
         // GameObjectのIDをSpeakerのIDとして利用
         public sealed override string Id { get; }
+
+        public override GameObject GameObject { get; }
+        public override Vrm10Instance Vrm10Instance { get; }
 
         /// <summary>
         /// 両目の中心の位置を顔の位置として利用する
@@ -31,29 +35,33 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             }
         }
 
+        /// <summary>
+        /// 腰の位置をSpeakerの前方向として利用する
+        /// </summary>
+        public override Vector3 BodyForward => _animator.GetBoneTransform(HumanBodyBones.Chest).forward;
+
         private readonly GameObject _vrmGameObject;
         private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly Animator _animator;
-
         private readonly Subject<(ValueTask<SynthesisResult>, AutoResetUniTaskCompletionSource, CancellationToken)>
             _speechRegisterSubject =
                 new();
-
-        /// <summary>
-        /// Dispose時に発火する
-        /// </summary>
-        public Action OnDisposed;
+        
+        private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
 
         public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
         {
+            GameObject = vrm10Instance.gameObject;
+            Vrm10Instance = vrm10Instance;
+
             // SpeakerのIDを設定
             Id = $"voicevox_vrm_{vrm10Instance.gameObject.GetInstanceID().ToString()}";
-            
+
             _voicevoxSynthesizerProvider = synthesizerProvider;
             _vrmGameObject = vrm10Instance.gameObject;
             _animator = _vrmGameObject.GetComponent<Animator>();
-            
+
             var audioSource = _vrmGameObject.AddComponent<AudioSource>();
             var lipSync = _vrmGameObject.AddComponent<VoicevoxVrmLipSyncPlayer>();
 
@@ -74,7 +82,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                         await voicevoxSpeakPlayer.PlayAsync(result, ctsToken);
                         autoResetUniTaskCompletionSource.TrySetResult();
                     }
-                    catch (OperationCanceledException e)
+                    catch (OperationCanceledException)
                     {
                         autoResetUniTaskCompletionSource.TrySetCanceled();
                     }
@@ -110,13 +118,16 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             await autoResetUniTaskCompletionSource.Task;
         }
 
+        public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
+
         public override void Dispose()
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
             _speechRegisterSubject.Dispose(true);
             Object.Destroy(_vrmGameObject);
-            OnDisposed?.Invoke();
+            
+            _onDisposeUniTaskCompletionSource.TrySetResult();
         }
     }
 }

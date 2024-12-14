@@ -8,7 +8,6 @@ namespace AvatarSpeaker.UIs
     public sealed class UiController : MonoBehaviour
     {
         [SerializeField] private Canvas _mainCanvas;
-
         [SerializeField] private Canvas _avatarSubCanvas;
         [SerializeField] private Canvas _roomSpaceSubCanvas;
         [SerializeField] private Canvas _cameraSubCanvas;

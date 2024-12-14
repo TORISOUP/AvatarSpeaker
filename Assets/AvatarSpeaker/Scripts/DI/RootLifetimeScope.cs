@@ -5,8 +5,11 @@ using AvatarSpeaker.Infrastructures.RoomSpaces;
 using AvatarSpeaker.Infrastructures.SpeakerSources;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using AvatarSpeaker.Infrastructures.VoicevoxSpeakers;
-using AvatarSpeaker.Scripts.Externals;
+using AvatarSpeaker.Scripts.Views;
+using AvatarSpeaker.Scripts.Views.ViewBinder;
+using AvatarSpeaker.StartUp;
 using AvatarSpeaker.UseCases;
+using UnityEngine;
 using VContainer;
 using VContainer.Unity;
 
@@ -14,31 +17,39 @@ namespace AvatarSpeaker.DI
 {
     public class RootLifetimeScope : LifetimeScope
     {
+        [SerializeField] private SpeakerCameraView _speakerCameraView;
+        [SerializeField] private UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundView;
+
         protected override void Configure(IContainerBuilder builder)
         {
-            // External
-            builder.Register<GameObjectRepository>(Lifetime.Scoped).AsSelf().As<IDisposable>();
+            // StartUp
+            builder.RegisterEntryPoint<ApplicationStartUp>();
             
             // SpeakerSource
-            builder.Register<LocalSpeakerSourceProvider>(Lifetime.Scoped)
-                .As<ISpeakerSourceProvider, IDisposable>();
-            
-            // RoomSpace
-            builder.Register<SingletonRoomSpaceProvider>(Lifetime.Scoped)
-                .As<IRoomSpaceProvider, IDisposable>();
-            
-            // UseCases
-            builder.Register<SpeakerUseCase>(Lifetime.Scoped);
-            builder.Register<RoomSpaceUseCase>(Lifetime.Scoped);
-            
-            //
-            builder.Register<VoicevoxSpeakerProvider>(Lifetime.Scoped).As<ISpeakerProvider, IDisposable>();
+            builder.Register<LocalSpeakerSourceProvider>(Lifetime.Singleton)
+                .AsImplementedInterfaces();
 
-            
-            builder.Register<CurrentConfigurationRepository>(Lifetime.Scoped)
+            // RoomSpace
+            builder.Register<RoomSpaceProviderImpl>(Lifetime.Singleton)
+                .AsImplementedInterfaces();
+
+            // UseCases
+            builder.Register<SpeakerUseCase>(Lifetime.Singleton);
+            builder.Register<RoomSpaceUseCase>(Lifetime.Singleton);
+            builder.Register<SpeakerCameraUseCase>(Lifetime.Singleton);
+
+            // View
+            builder.RegisterInstance(_speakerCameraView);
+            builder.RegisterEntryPoint<RoomSpaceViewBinder>();
+            builder.RegisterInstance(_uguiRoomSpaceBackgroundView);
+
+            //
+            builder.Register<VoicevoxSpeakerProvider>(Lifetime.Singleton).As<ISpeakerProvider, IDisposable>();
+
+
+            builder.Register<CurrentConfigurationRepository>(Lifetime.Singleton)
                 .WithParameter(new VoiceControlConnectionSettings("http://localhost:50021"));
-            builder.Register<VoicevoxSynthesizerProvider>(Lifetime.Scoped).AsSelf().As<IDisposable>();
-            
+            builder.Register<VoicevoxSynthesizerProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
         }
     }
 }

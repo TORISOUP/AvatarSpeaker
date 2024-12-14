@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 
@@ -12,15 +13,28 @@ namespace AvatarSpeaker.Core
     public sealed class RoomSpace : IDisposable
     {
         public ReadOnlyReactiveProperty<Color> BackgroundColor => _backgroundColor;
-        private readonly ReactiveProperty<Color> _backgroundColor = new(Color.white);
+        private readonly ReactiveProperty<Color> _backgroundColor;
 
         /// <summary>
         /// Speakerは1つだけ配置できる
         /// </summary>
         public ReadOnlyReactiveProperty<Speaker?> CurrentSpeaker => _currentSpeaker;
-        private readonly ReactiveProperty<Speaker?> _currentSpeaker = new();
+        private readonly ReactiveProperty<Speaker?> _currentSpeaker;
         
-        public readonly SpeakerCamera SpeakerCamera = new();
+        public readonly SpeakerCamera SpeakerCamera;
+
+        /// <summary>
+        /// Dispose時に完了するUniTask
+        /// </summary>
+        public UniTask OnDisposeAsync => _disposeTaskCompletionSource.Task;
+        private readonly UniTaskCompletionSource _disposeTaskCompletionSource = new();
+        
+        public RoomSpace()
+        {
+            _backgroundColor = new ReactiveProperty<Color>(Color.white);
+            _currentSpeaker = new ReactiveProperty<Speaker?>(null);
+            SpeakerCamera = new SpeakerCamera();
+        }
 
         /// <summary>
         /// SpeakerをRoomSpaceから削除する
@@ -63,8 +77,16 @@ namespace AvatarSpeaker.Core
 
         public void Dispose()
         {
+            // Speakerを破棄する
+            _currentSpeaker.Value?.Dispose();
+
+            // SpeakerCameraを破棄する
+            SpeakerCamera.Dispose();
+
             _backgroundColor.Dispose();
             _currentSpeaker.Dispose();
+            
+            _disposeTaskCompletionSource.TrySetResult();
         }
     }
 }

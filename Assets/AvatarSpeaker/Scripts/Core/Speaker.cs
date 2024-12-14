@@ -19,13 +19,22 @@ namespace AvatarSpeaker.Core
         /// Speakerの顔の位置
         /// </summary>
         public abstract Vector3 FacePosition { get; }
+        
+        /// <summary>
+        /// 体の前方を表すベクトル
+        /// </summary>
+        public abstract Vector3 BodyForward { get; }
 
         /// <summary>
         /// Speakerに発話させる
         /// </summary>
         public abstract UniTask SpeechAsync(SpeechParameter speechParameter, CancellationToken ct);
-
-
+        
+        /// <summary>
+        /// Dispose時に発火するUniTask
+        /// </summary>
+        public abstract UniTask OnDisposeAsync { get; }
+        
         public abstract void Dispose();
 
         public bool Equals(Speaker other)

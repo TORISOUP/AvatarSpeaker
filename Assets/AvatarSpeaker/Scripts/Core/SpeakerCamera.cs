@@ -18,6 +18,9 @@ namespace AvatarSpeaker.Core
         /// 姿勢
         /// </summary>
         public ReactiveProperty<Quaternion> Rotation { get; } = new(Quaternion.identity);
+        
+        
+        public Action OnDispose { get; set; }
 
         /// <summary>
         /// 指定した位置を向く
@@ -32,6 +35,7 @@ namespace AvatarSpeaker.Core
 
         public void Dispose()
         {
+            OnDispose?.Invoke();
         }
     }
 }

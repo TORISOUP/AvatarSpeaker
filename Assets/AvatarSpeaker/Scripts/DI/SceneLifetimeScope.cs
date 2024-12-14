@@ -1,3 +1,4 @@
+using AvatarSpeaker.Scripts.Views;
 using AvatarSpeaker.UIs;
 using UnityEngine;
 using VContainer;
