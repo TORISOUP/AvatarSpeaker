@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
 
-namespace AvatarSpeaker.UIs
+namespace AvatarSpeaker.UIs.Presenters
 {
     public class LoadVrmUiPresenter : MonoBehaviour
     {

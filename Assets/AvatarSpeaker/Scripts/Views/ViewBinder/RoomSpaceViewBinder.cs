@@ -66,7 +66,7 @@ namespace AvatarSpeaker.Scripts.Views.ViewBinder
 
             // UguiRoomSpaceBackgroundViewを生成
             var backgroundView = UnityEngine.Object.Instantiate(_uguiRoomSpaceBackgroundViewPrefab);
-            backgroundView.SetWorldCamera(speakerCameraView.Camera);
+            backgroundView.Initalize(roomSpace, speakerCameraView.Camera);
 
             // RoomSpaceViewに登録
             roomSpaceView.Initalize(roomSpace, backgroundView, speakerCameraView);

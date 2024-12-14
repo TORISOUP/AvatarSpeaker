@@ -75,6 +75,11 @@ namespace AvatarSpeaker.Core
             _currentSpeaker.Value = speaker;
         }
 
+        public void ChangeBackgroundColor(Color color)
+        {
+            _backgroundColor.Value = color;
+        }
+        
         public void Dispose()
         {
             // Speakerを破棄する

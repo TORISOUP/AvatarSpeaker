@@ -1,5 +1,7 @@
+using AvatarSpeaker.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using R3;
 
 namespace AvatarSpeaker.Scripts.Views
 {
@@ -10,15 +12,18 @@ namespace AvatarSpeaker.Scripts.Views
     {
         [SerializeField] private Image _backGroundImage;
         [SerializeField] private Canvas _canvas;
-        
-        public void SetWorldCamera(Camera camera)
+
+        public void Initalize(RoomSpace roomSpace, Camera worldCamera)
         {
-            _canvas.worldCamera = camera;
+            _canvas.worldCamera = worldCamera;
+            roomSpace
+                .BackgroundColor.Subscribe(ChangeBackgroundColor)
+                .AddTo(this);
         }
 
         public GameObject Root => gameObject;
 
-        public void ChangeBackgroundColor(Color color)
+        private void ChangeBackgroundColor(Color color)
         {
             _backGroundImage.color = color;
         }

@@ -1,11 +1,10 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VContainer;
 
-namespace AvatarSpeaker.UIs
+namespace AvatarSpeaker.UIs.Presenters
 {
     public sealed class MenuButtonPresenter : MonoBehaviour
     {

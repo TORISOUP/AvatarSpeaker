@@ -3,6 +3,7 @@ using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
 using Cysharp.Threading.Tasks;
 using R3;
+using UnityEngine;
 
 namespace AvatarSpeaker.UseCases
 {
@@ -64,6 +65,14 @@ namespace AvatarSpeaker.UseCases
 
             // カメラを現在のSpeakerの顔にフォーカスする
             _speakerCameraUseCase.FocusOnCurrentSpeakerFace();
+        }
+        
+        public void ChangeBackgroundColor(Color color)
+        {
+            var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+            if (roomSpace == null) return;
+            
+            roomSpace.ChangeBackgroundColor(color);
         }
     }
 }

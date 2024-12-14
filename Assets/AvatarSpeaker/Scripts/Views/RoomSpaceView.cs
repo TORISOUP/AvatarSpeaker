@@ -50,6 +50,5 @@ namespace AvatarSpeaker.Scripts.Views
     public interface IBackgroundView : IDisposable
     {
         GameObject Root { get; }
-        void ChangeBackgroundColor(Color color);
     }
 }
