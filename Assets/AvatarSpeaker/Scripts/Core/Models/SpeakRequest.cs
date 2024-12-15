@@ -1,18 +1,16 @@
 using System;
-using System.Threading;
-using Cysharp.Threading.Tasks;
 
 namespace AvatarSpeaker.Core
 {
-    public readonly struct SpeechParameter : IEquatable<SpeechParameter>
+    public readonly struct SpeakRequest : IEquatable<SpeakRequest>
     {
         public string Text { get; }
-        public SpeechStyle Style { get; }
+        public SpeakStyle Style { get; }
         public float SpeedScale { get; }
         public float PitchScale { get; }
         public float VolumeScale { get; }
 
-        public SpeechParameter(string text, SpeechStyle style, float speedScale, float pitchScale, float volumeScale)
+        public SpeakRequest(string text, SpeakStyle style, float speedScale, float pitchScale, float volumeScale)
         {
             Text = text;
             Style = style;
@@ -21,10 +19,10 @@ namespace AvatarSpeaker.Core
             VolumeScale = volumeScale;
         }
         
-        public SpeechParameter(string text)
+        public SpeakRequest(string text)
         {
             Text = text;
-            Style = new SpeechStyle(0, "Default");
+            Style = new SpeakStyle(0, "Default");
             SpeedScale = 1.0f;
             PitchScale = 1.0f;
             VolumeScale = 1.0f;
@@ -32,7 +30,7 @@ namespace AvatarSpeaker.Core
 
 
 
-        public bool Equals(SpeechParameter other)
+        public bool Equals(SpeakRequest other)
         {
             return Text == other.Text && Style.Equals(other.Style) && SpeedScale.Equals(other.SpeedScale) &&
                    PitchScale.Equals(other.PitchScale) && VolumeScale.Equals(other.VolumeScale);
@@ -40,7 +38,7 @@ namespace AvatarSpeaker.Core
 
         public override bool Equals(object obj)
         {
-            return obj is SpeechParameter other && Equals(other);
+            return obj is SpeakRequest other && Equals(other);
         }
 
         public override int GetHashCode()
@@ -49,35 +47,30 @@ namespace AvatarSpeaker.Core
         }
     }
 
-    public readonly struct SpeechStyle : IEquatable<SpeechStyle>
+    public readonly struct SpeakStyle : IEquatable<SpeakStyle>
     {
         public int Id { get; }
         public string DisplayName { get; }
 
-        public SpeechStyle(int id, string displayName)
+        public SpeakStyle(int id, string displayName)
         {
             Id = id;
             DisplayName = displayName;
         }
 
-        public bool Equals(SpeechStyle other)
+        public bool Equals(SpeakStyle other)
         {
             return Id == other.Id && DisplayName == other.DisplayName;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is SpeechStyle other && Equals(other);
+            return obj is SpeakStyle other && Equals(other);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, DisplayName);
         }
-    }
-
-    public interface ISpeechStyleProvider
-    {
-        UniTask<SpeechStyle[]> GetSpeechStylesAsync(CancellationToken ct);
     }
 }

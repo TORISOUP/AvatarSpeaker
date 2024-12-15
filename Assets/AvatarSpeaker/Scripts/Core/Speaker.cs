@@ -28,7 +28,7 @@ namespace AvatarSpeaker.Core
         /// <summary>
         /// Speakerに発話させる
         /// </summary>
-        public abstract UniTask SpeechAsync(SpeechParameter speechParameter, CancellationToken ct);
+        public abstract UniTask SpeakAsync(SpeakRequest speakRequest, CancellationToken ct);
         
         /// <summary>
         /// Dispose時に発火するUniTask

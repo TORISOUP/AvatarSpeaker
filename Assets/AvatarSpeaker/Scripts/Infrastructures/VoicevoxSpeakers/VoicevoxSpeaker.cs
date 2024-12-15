@@ -95,7 +95,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         }
 
 
-        public override async UniTask SpeechAsync(SpeechParameter speechParameter, CancellationToken ct)
+        public override async UniTask SpeakAsync(SpeakRequest speakRequest, CancellationToken ct)
         {
             var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
@@ -104,11 +104,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
             // Voicevoxの音声合成を開始
             var task = synthesiser.SynthesizeSpeechAsync(
-                text: speechParameter.Text,
-                styleId: speechParameter.Style.Id,
-                speedScale: (decimal)speechParameter.SpeedScale,
-                pitchScale: (decimal)speechParameter.PitchScale,
-                volumeScale: (decimal)speechParameter.VolumeScale,
+                text: speakRequest.Text,
+                styleId: speakRequest.Style.Id,
+                speedScale: (decimal)speakRequest.SpeedScale,
+                pitchScale: (decimal)speakRequest.PitchScale,
+                volumeScale: (decimal)speakRequest.VolumeScale,
                 cancellationToken: lcts.Token);
 
             // Observableを非同期処理を行えるQueueとして利用
