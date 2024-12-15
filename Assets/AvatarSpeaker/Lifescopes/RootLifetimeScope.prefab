@@ -50,3 +50,4 @@ MonoBehaviour:
   autoInjectGameObjects: []
   _speakerCameraView: {fileID: 7416773703758604404, guid: 2d814bdfdae2bc342818c3c354449bf2, type: 3}
   _uguiRoomSpaceBackgroundView: {fileID: 4135684883855162968, guid: 0b26de85f3e1f664b82f93b049bf27e7, type: 3}
+  _speakerAnimatorController: {fileID: 9100000, guid: bdf7b56103c75c94fb5683b49c53f4cd, type: 2}

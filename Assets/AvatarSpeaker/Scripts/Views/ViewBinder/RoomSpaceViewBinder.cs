@@ -16,16 +16,19 @@ namespace AvatarSpeaker.Scripts.Views.ViewBinder
         private readonly IRoomSpaceProvider _roomSpaceProvider;
         private readonly CancellationTokenSource _cts = new();
         private readonly UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundViewPrefab;
+        private readonly RuntimeAnimatorController _speakerAnimatorController;
 
         private RoomSpaceView _currentRoomSpaceView;
 
         public RoomSpaceViewBinder(SpeakerCameraView speakerCameraViewPrefab,
             IRoomSpaceProvider roomSpaceProvider,
-            UguiRoomSpaceBackgroundView backgroundViewPrefab)
+            UguiRoomSpaceBackgroundView backgroundViewPrefab,
+            RuntimeAnimatorController speakerAnimatorController)
         {
             _speakerCameraViewPrefab = speakerCameraViewPrefab;
             _roomSpaceProvider = roomSpaceProvider;
             _uguiRoomSpaceBackgroundViewPrefab = backgroundViewPrefab;
+            _speakerAnimatorController = speakerAnimatorController;
         }
 
         public void Initialize()
@@ -46,7 +49,7 @@ namespace AvatarSpeaker.Scripts.Views.ViewBinder
                 {
                     var speakerViewObject = new GameObject("VrmSpeakerView");
                     var speakerView = speakerViewObject.AddComponent<VrmSpeakerView>();
-                    speakerView.SetVrmSpeaker(speaker);
+                    speakerView.SetVrmSpeaker(speaker, _speakerAnimatorController);
                     // ヒエラルキー上の位置を調整
                     speakerViewObject.transform.SetParent(_currentRoomSpaceView.Root.transform);
                 })

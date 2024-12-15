@@ -1,6 +1,8 @@
 using System;
 using System.Threading;
+using AvatarSpeaker.Core.Models;
 using Cysharp.Threading.Tasks;
+using R3;
 using UnityEngine;
 
 namespace AvatarSpeaker.Core
@@ -19,7 +21,7 @@ namespace AvatarSpeaker.Core
         /// Speakerの顔の位置
         /// </summary>
         public abstract Vector3 FacePosition { get; }
-        
+
         /// <summary>
         /// 体の前方を表すベクトル
         /// </summary>
@@ -29,12 +31,22 @@ namespace AvatarSpeaker.Core
         /// Speakerに発話させる
         /// </summary>
         public abstract UniTask SpeakAsync(SpeakRequest speakRequest, CancellationToken ct);
-        
+
         /// <summary>
         /// Dispose時に発火するUniTask
         /// </summary>
         public abstract UniTask OnDisposeAsync { get; }
-        
+
+        /// <summary>
+        /// 現在のポーズ
+        /// </summary>
+        public abstract ReadOnlyReactiveProperty<IdlePose> IdlePose { get; }
+
+        /// <summary>
+        /// 現在のポーズを変更する
+        /// </summary>
+        public abstract void ChangeIdlePose(IdlePose idlePose);
+
         public abstract void Dispose();
 
         public bool Equals(Speaker other)

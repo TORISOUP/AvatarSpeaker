@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AvatarSpeaker.Core;
+using AvatarSpeaker.Core.Models;
 using AvatarSpeaker.Cushion.VRM;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using Cysharp.Threading.Tasks;
@@ -21,6 +22,10 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public override GameObject GameObject { get; }
         public override Vrm10Instance Vrm10Instance { get; }
+
+        public override ReadOnlyReactiveProperty<IdlePose> IdlePose => _idlePose;
+
+        private readonly ReactiveProperty<IdlePose> _idlePose = new(Core.Models.IdlePose.Pose1);
 
         /// <summary>
         /// 両目の中心の位置を顔の位置として利用する
@@ -44,10 +49,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly Animator _animator;
+
         private readonly Subject<(ValueTask<SynthesisResult>, AutoResetUniTaskCompletionSource, CancellationToken)>
             _speechRegisterSubject =
                 new();
-        
+
         private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
 
         public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
@@ -120,13 +126,19 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
 
+        public override void ChangeIdlePose(IdlePose idlePose)
+        {
+            _idlePose.Value = idlePose;
+        }
+
         public override void Dispose()
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
             _speechRegisterSubject.Dispose(true);
-            Object.Destroy(_vrmGameObject);
+            _idlePose.Dispose();
             
+            Object.Destroy(_vrmGameObject);
             _onDisposeUniTaskCompletionSource.TrySetResult();
         }
     }

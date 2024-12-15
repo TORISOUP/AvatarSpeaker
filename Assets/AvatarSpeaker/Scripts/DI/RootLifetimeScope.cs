@@ -22,6 +22,7 @@ namespace AvatarSpeaker.DI
     {
         [SerializeField] private SpeakerCameraView _speakerCameraView;
         [SerializeField] private UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundView;
+        [SerializeField] private RuntimeAnimatorController _speakerAnimatorController;
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -45,7 +46,9 @@ namespace AvatarSpeaker.DI
 
             // View
             builder.RegisterInstance(_speakerCameraView);
-            builder.RegisterEntryPoint<RoomSpaceViewBinder>();
+            builder.RegisterEntryPoint<RoomSpaceViewBinder>()
+                .WithParameter(_speakerAnimatorController);
+            
             builder.RegisterInstance(_uguiRoomSpaceBackgroundView);
 
             //
