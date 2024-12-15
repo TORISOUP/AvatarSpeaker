@@ -13,6 +13,21 @@ namespace AvatarSpeaker.Core
     public abstract class Speaker : IDisposable, IEquatable<Speaker>
     {
         /// <summary>
+        /// 現在のポーズ
+        /// </summary>
+        public ReadOnlyReactiveProperty<IdlePose> CurrentIdlePose => _currentIdlePose;
+
+        private readonly ReactiveProperty<IdlePose> _currentIdlePose = new(Models.IdlePose.Pose1);
+
+        /// <summary>
+        /// 現在の発話パラメータ
+        /// </summary>
+        public ReadOnlyReactiveProperty<SpeakParameter> CurrentSpeakParameter => _currentSpeakParameter;
+
+        private readonly ReactiveProperty<SpeakParameter> _currentSpeakParameter = new(SpeakParameter.Default);
+
+
+        /// <summary>
         /// SpeakerのID
         /// </summary>
         public abstract string Id { get; }
@@ -30,24 +45,43 @@ namespace AvatarSpeaker.Core
         /// <summary>
         /// Speakerに発話させる
         /// </summary>
-        public abstract UniTask SpeakAsync(SpeakRequest speakRequest, CancellationToken ct);
+        public abstract UniTask SpeakAsync(string text, CancellationToken ct);
+
 
         /// <summary>
         /// Dispose時に発火するUniTask
         /// </summary>
         public abstract UniTask OnDisposeAsync { get; }
 
-        /// <summary>
-        /// 現在のポーズ
-        /// </summary>
-        public abstract ReadOnlyReactiveProperty<IdlePose> IdlePose { get; }
 
         /// <summary>
         /// 現在のポーズを変更する
         /// </summary>
-        public abstract void ChangeIdlePose(IdlePose idlePose);
+        public void ChangeIdlePose(IdlePose idlePose)
+        {
+            _currentIdlePose.Value = idlePose;
+        }
 
-        public abstract void Dispose();
+        /// <summary>
+        /// 発話パラメータを変更する
+        /// </summary>
+        public void ChangeSpeakParameter(SpeakParameter speakParameter)
+        {
+            _currentSpeakParameter.Value = speakParameter;
+        }
+
+
+        public void Dispose()
+        {
+            _currentIdlePose.Dispose();
+            _currentSpeakParameter.Dispose();
+            OnDisposed();
+        }
+
+        protected virtual void OnDisposed()
+        {
+            //
+        }
 
         public bool Equals(Speaker other)
         {

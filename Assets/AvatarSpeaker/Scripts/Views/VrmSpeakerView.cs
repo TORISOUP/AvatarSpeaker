@@ -30,7 +30,7 @@ namespace AvatarSpeaker.Scripts.Views
             animator.runtimeAnimatorController = _runtimeAnimatorController;
 
             // IdlePoseの変更をAnimatorに反映
-            _vrmSpeaker.IdlePose
+            _vrmSpeaker.CurrentIdlePose
                 .Subscribe(idlePose => animator.SetTrigger(ToTrigger(idlePose)))
                 .AddTo(this);
         }

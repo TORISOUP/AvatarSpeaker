@@ -35,7 +35,7 @@ namespace AvatarSpeaker.StartUp.Services
             //　外部からの発話リクエストをSpeakerUseCaseに渡す
             _speakRequestProvider.OnSpeakRequest.Subscribe(request =>
             {
-                _speakerUseCase.SpeakByCurrentSpeakerAsync(request, _cts.Token).Forget();
+                _speakerUseCase.SpeakByCurrentSpeakerAsync(request.Text, _cts.Token).Forget();
             });
         }
     }

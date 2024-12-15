@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
+using AvatarSpeaker.Core.Models;
 using Cysharp.Threading.Tasks;
 using R3;
 

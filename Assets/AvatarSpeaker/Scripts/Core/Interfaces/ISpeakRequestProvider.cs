@@ -1,3 +1,4 @@
+using AvatarSpeaker.Core.Models;
 using R3;
 
 namespace AvatarSpeaker.Core.Interfaces

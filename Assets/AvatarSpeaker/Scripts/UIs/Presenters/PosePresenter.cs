@@ -52,7 +52,7 @@ namespace AvatarSpeaker.UIs.Presenters
                     var speaker = _speakerUseCase.GetCurrentSpeaker();
                     if(speaker != null)
                     {
-                        _dropdown.value = (int)speaker.IdlePose.CurrentValue;
+                        _dropdown.value = (int)speaker.CurrentIdlePose.CurrentValue;
                     }
                 })
                 .AddTo(this);

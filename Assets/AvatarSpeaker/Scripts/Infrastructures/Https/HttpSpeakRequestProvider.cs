@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
+using AvatarSpeaker.Core.Models;
 using Cysharp.Threading.Tasks;
 using R3;
 
@@ -23,8 +24,7 @@ namespace AvatarSpeaker.Infrastructures.Https
             {
                 UniTask.Void(async () =>
                 {
-                    var speakRequest = new SpeakRequest(dto.Text, new SpeakStyle(dto.Style, ""), dto.SpeedScale,
-                        dto.PitchScale, dto.VolumeScale);
+                    var speakRequest = new SpeakRequest(dto.Text);
                     await UniTask.SwitchToMainThread(_cts.Token);
                     _speakRequestSubject.OnNext(speakRequest);
                 });

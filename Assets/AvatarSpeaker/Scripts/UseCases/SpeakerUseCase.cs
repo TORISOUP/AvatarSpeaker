@@ -23,9 +23,8 @@ namespace AvatarSpeaker.UseCases
         /// <summary>
         /// RoomSpaceのSpeakerが変更されたときに発行されるObservable
         /// </summary>
-        public Observable<Unit> OnSpeakerChanged { get; }
-
-
+        public Observable<Speaker?> OnSpeakerChanged { get; }
+        
         public SpeakerUseCase(ISpeakerSourceProvider speakerSourceProvider,
             IRoomSpaceProvider roomSpaceProvider,
             ISpeakStyleProvider speakStyleProvider)
@@ -37,9 +36,8 @@ namespace AvatarSpeaker.UseCases
             var connectable =
                 _roomSpaceProvider.CurrentRoomSpace.Select(x => x.CurrentSpeaker)
                     .Where(x => x != null)
-                    .Select(x => x.Select(y => y != null))
+                    .Select(x => x.Select(y => y))
                     .Switch()
-                    .Select(_ => Unit.Default)
                     .Publish();
             _speakerChangedDisposable = connectable.Connect();
             OnSpeakerChanged = connectable;
@@ -65,11 +63,11 @@ namespace AvatarSpeaker.UseCases
         /// <summary>
         /// 現在のRoomSpaceのSpeakerを発話させる
         /// </summary>
-        public async UniTask SpeakByCurrentSpeakerAsync(SpeakRequest speakRequest, CancellationToken ct)
+        public async UniTask SpeakByCurrentSpeakerAsync(string text, CancellationToken ct)
         {
             // 現在のRoomSpaceのSpeakerを取得して発話させる
             var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
-                .FirstAsync(x => x != null, ct);
+                .FirstAsync(x => x != null, ct)!;
 
             var speaker = roomSpace.CurrentSpeaker.CurrentValue;
             if (speaker == null)
@@ -77,29 +75,9 @@ namespace AvatarSpeaker.UseCases
                 return;
             }
 
-            await speaker.SpeakAsync(speakRequest, ct);
+            await speaker.SpeakAsync(text, ct);
         }
-
-
-        /// <summary>
-        /// 現在のRoomSpaceのSpeakerを発話させる
-        /// </summary>
-        public async UniTask SpeakByCurrentSpeakerAsync(string text, SpeakStyle style, CancellationToken ct)
-        {
-            var speakParameter = new SpeakRequest(text, style, 1.0f, 1.0f, 1.0f);
-
-            // 現在のRoomSpaceのSpeakerを取得して発話させる
-            var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
-                .FirstAsync(x => x != null, ct);
-
-            var speaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (speaker == null)
-            {
-                return;
-            }
-
-            await speaker.SpeakAsync(speakParameter, ct);
-        }
+        
         
         public void ChangeIdlePoseToCurrentSpeaker(IdlePose idlePose)
         {

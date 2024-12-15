@@ -23,10 +23,6 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         public override GameObject GameObject { get; }
         public override Vrm10Instance Vrm10Instance { get; }
 
-        public override ReadOnlyReactiveProperty<IdlePose> IdlePose => _idlePose;
-
-        private readonly ReactiveProperty<IdlePose> _idlePose = new(Core.Models.IdlePose.Pose1);
-
         /// <summary>
         /// 両目の中心の位置を顔の位置として利用する
         /// </summary>
@@ -101,16 +97,18 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         }
 
 
-        public override async UniTask SpeakAsync(SpeakRequest speakRequest, CancellationToken ct)
+        public override async UniTask SpeakAsync(string text, CancellationToken ct)
         {
             var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
             var synthesiser = _voicevoxSynthesizerProvider.Current.CurrentValue;
 
+            var speakRequest = this.CurrentSpeakParameter.CurrentValue;
+
             // Voicevoxの音声合成を開始
             var task = synthesiser.SynthesizeSpeechAsync(
-                text: speakRequest.Text,
+                text: text,
                 styleId: speakRequest.Style.Id,
                 speedScale: (decimal)speakRequest.SpeedScale,
                 pitchScale: (decimal)speakRequest.PitchScale,
@@ -126,18 +124,12 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
 
-        public override void ChangeIdlePose(IdlePose idlePose)
-        {
-            _idlePose.Value = idlePose;
-        }
-
-        public override void Dispose()
+        protected override void OnDisposed()
         {
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
             _speechRegisterSubject.Dispose(true);
-            _idlePose.Dispose();
-            
+
             Object.Destroy(_vrmGameObject);
             _onDisposeUniTaskCompletionSource.TrySetResult();
         }
