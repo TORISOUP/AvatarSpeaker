@@ -8,7 +8,7 @@ namespace AvatarSpeaker.UIs
     public sealed class UiController : MonoBehaviour
     {
         [SerializeField] private Canvas _mainCanvas;
-        [SerializeField] private Canvas _avatarSubCanvas;
+        [SerializeField] private Canvas _speakerSubCanvas;
         [SerializeField] private Canvas _roomSpaceSubCanvas;
         [SerializeField] private Canvas _cameraSubCanvas;
 
@@ -19,21 +19,21 @@ namespace AvatarSpeaker.UIs
         
         public void OpenAvatarSubCanvas()
         {
-            _avatarSubCanvas.enabled = true;
+            _speakerSubCanvas.enabled = true;
             _roomSpaceSubCanvas.enabled = false;
             _cameraSubCanvas.enabled = false;
         }
 
         public void OpenRoomSpaceSubCanvas()
         {
-            _avatarSubCanvas.enabled = false;
+            _speakerSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = true;
             _cameraSubCanvas.enabled = false;
         }
 
         public void OpenCameraSubCanvas()
         {
-            _avatarSubCanvas.enabled = false;
+            _speakerSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = false;
             _cameraSubCanvas.enabled = true;
         }
@@ -41,6 +41,9 @@ namespace AvatarSpeaker.UIs
         public void OpenMainUI()
         {
             _mainCanvas.enabled = true;
+            _cameraSubCanvas.enabled = false;
+            _roomSpaceSubCanvas.enabled = false;
+            _speakerSubCanvas.enabled = true;
             IsUiUsing.Value = true;
         }
 
@@ -49,7 +52,7 @@ namespace AvatarSpeaker.UIs
             _mainCanvas.enabled = false;
             _cameraSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = false;
-            _avatarSubCanvas.enabled = false;
+            _speakerSubCanvas.enabled = false;
             IsUiUsing.Value = false;
         }
 

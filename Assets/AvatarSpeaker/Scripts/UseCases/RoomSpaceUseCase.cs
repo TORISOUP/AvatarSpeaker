@@ -1,3 +1,4 @@
+#nullable enable
 using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
@@ -27,6 +28,9 @@ namespace AvatarSpeaker.UseCases
             _speakerProvider = speakerProvider;
             _speakerCameraUseCase = speakerCameraUseCase;
         }
+        
+        public RoomSpace? CurrentRoomSpace => _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+        
 
         /// <summary>
         /// 新しいRoomSpaceを作成し、古いRoomSpaceを破棄する
@@ -69,7 +73,7 @@ namespace AvatarSpeaker.UseCases
         
         public void ChangeBackgroundColor(Color color)
         {
-            var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+            var roomSpace = CurrentRoomSpace;
             if (roomSpace == null) return;
             
             roomSpace.ChangeBackgroundColor(color);

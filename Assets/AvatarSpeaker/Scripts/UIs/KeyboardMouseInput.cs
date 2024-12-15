@@ -3,6 +3,7 @@ using R3.Triggers;
 using UnityEngine;
 using VContainer;
 using R3;
+using UnityEngine.EventSystems;
 
 namespace AvatarSpeaker.UIs
 {
@@ -11,7 +12,7 @@ namespace AvatarSpeaker.UIs
         [SerializeField] private float _moveSpeed = 1.0f;
         [SerializeField] private float _rotateSpeed = 1.0f;
         [SerializeField] private float _zoomSpeed = 5.0f;
-
+        
         private SpeakerCameraUseCase _speakerCameraUseCase;
         
         [Inject]
@@ -24,6 +25,7 @@ namespace AvatarSpeaker.UIs
         private void SetUp()
         {
             this.UpdateAsObservable()
+                .Where(_=> EventSystem.current.currentSelectedGameObject == null)
                 .Subscribe(_ =>
                 {
                     Rotate();

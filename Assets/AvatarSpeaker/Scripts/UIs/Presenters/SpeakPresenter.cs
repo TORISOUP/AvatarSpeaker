@@ -19,6 +19,7 @@ namespace AvatarSpeaker.UIs.Presenters
     public class SpeakPresenter : MonoBehaviour
     {
         [SerializeField] private GameObject _speakArea;
+        [SerializeField] private GameObject _loading;
 
         [SerializeField] private TMP_InputField _textInputField;
         [SerializeField] private TMP_Dropdown _styleDropdown;
@@ -66,6 +67,7 @@ namespace AvatarSpeaker.UIs.Presenters
         private void Awake()
         {
             _speakArea.SetActive(false);
+            _loading.SetActive(false);
         }
 
         /// <summary>
@@ -74,6 +76,8 @@ namespace AvatarSpeaker.UIs.Presenters
         private async UniTask SetUpAsync(Speaker speaker, CancellationToken ct)
         {
             _speakArea.SetActive(false);
+            _loading.SetActive(true);
+
             _styleDropdown.onValueChanged.RemoveAllListeners();
 
             if (speaker == null) return;
@@ -152,6 +156,7 @@ namespace AvatarSpeaker.UIs.Presenters
             }
 
             _speakArea.SetActive(true);
+            _loading.SetActive(false);
         }
     }
 }
