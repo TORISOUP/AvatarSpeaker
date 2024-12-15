@@ -31,7 +31,7 @@ namespace AvatarSpeaker.Core
         
         public RoomSpace()
         {
-            _backgroundColor = new ReactiveProperty<Color>(Color.white);
+            _backgroundColor = new ReactiveProperty<Color>(Color.green);
             _currentSpeaker = new ReactiveProperty<Speaker?>(null);
             SpeakerCamera = new SpeakerCamera();
         }

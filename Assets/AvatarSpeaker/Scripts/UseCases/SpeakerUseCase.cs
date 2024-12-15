@@ -1,7 +1,9 @@
+#nullable enable
 using System;
 using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
+using AvatarSpeaker.Core.Models;
 using Cysharp.Threading.Tasks;
 using R3;
 
@@ -97,6 +99,34 @@ namespace AvatarSpeaker.UseCases
             }
 
             await speaker.SpeakAsync(speakParameter, ct);
+        }
+        
+        public void ChangeIdlePoseToCurrentSpeaker(IdlePose idlePose)
+        {
+            var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+            if (roomSpace == null)
+            {
+                return;
+            }
+
+            var speaker = roomSpace.CurrentSpeaker.CurrentValue;
+            if (speaker == null)
+            {
+                return;
+            }
+
+            speaker.ChangeIdlePose(idlePose);
+        }
+        
+        public Speaker? GetCurrentSpeaker()
+        {
+            var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+            if (roomSpace == null)
+            {
+                return null;
+            }
+
+            return roomSpace.CurrentSpeaker.CurrentValue;
         }
 
         public void Dispose()

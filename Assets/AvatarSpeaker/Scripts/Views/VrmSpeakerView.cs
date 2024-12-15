@@ -4,6 +4,7 @@ using AvatarSpeaker.Core.Models;
 using AvatarSpeaker.Cushion.VRM;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using R3;
 
 namespace AvatarSpeaker.Scripts.Views
 {
@@ -27,7 +28,11 @@ namespace AvatarSpeaker.Scripts.Views
         {
             var animator = _vrmSpeaker.GameObject.GetComponent<Animator>();
             animator.runtimeAnimatorController = _runtimeAnimatorController;
-            animator.SetTrigger(ToTrigger(_vrmSpeaker.IdlePose.CurrentValue));
+
+            // IdlePoseの変更をAnimatorに反映
+            _vrmSpeaker.IdlePose
+                .Subscribe(idlePose => animator.SetTrigger(ToTrigger(idlePose)))
+                .AddTo(this);
         }
 
         private async UniTaskVoid WaitForDisposeAsync(CancellationToken ct)

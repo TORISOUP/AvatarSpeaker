@@ -25,18 +25,24 @@ namespace AvatarSpeaker.UIs.Presenters
             _closeButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
                 .Subscribe(_ => _uiController.CloseMainUI());
 
-            _uiController.CloseMainUI();
-
             // Mキーを押すとメインUIを開く
             this.GetAsyncUpdateTrigger()
                 .Where(_ => Input.GetKeyDown(KeyCode.M))
-                .SubscribeAwait(async (_, ct) =>
+                .Subscribe( _ =>
                 {
-                    // UIを開く
-                    _uiController.OpenMainUI();
-                    // UIが閉じられるまで待機
-                    await _uiController.IsUiUsing.FirstAsync(x => !x, ct);
+                    if (_uiController.IsUiUsing.Value)
+                    {
+                        _uiController.CloseMainUI();
+                    }
+                    else
+                    {
+                        _uiController.OpenMainUI();
+                    }
+                    
                 }, destroyCancellationToken);
+
+            // 最初は開いておく
+            _uiController.OpenMainUI();
         }
     }
 }
