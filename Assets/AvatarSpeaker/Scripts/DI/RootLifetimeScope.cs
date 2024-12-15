@@ -8,11 +8,13 @@ using AvatarSpeaker.Infrastructures.SpeakerSources;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using AvatarSpeaker.Infrastructures.VoicevoxSpeakers;
 using AvatarSpeaker.Scripts.Views;
-using AvatarSpeaker.Scripts.Views.ViewBinder;
 using AvatarSpeaker.StartUp;
 using AvatarSpeaker.StartUp.Services;
 using AvatarSpeaker.UseCases;
+using AvatarSpeaker.Views;
+using AvatarSpeaker.Views.ViewBinder;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VContainer;
 using VContainer.Unity;
 
@@ -23,13 +25,13 @@ namespace AvatarSpeaker.DI
         [SerializeField] private SpeakerCameraView _speakerCameraView;
         [SerializeField] private UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundView;
         [SerializeField] private RuntimeAnimatorController _speakerAnimatorController;
+         [SerializeField] private SubtitleView _subtitleViewPrefab;
 
         protected override void Configure(IContainerBuilder builder)
         {
             // StartUp
             builder.RegisterEntryPoint<ApplicationStartUp>();
             builder.RegisterEntryPoint<ExternalSpeakRequestService>();
-            
             
             // SpeakerSource
             builder.Register<LocalSpeakerSourceProvider>(Lifetime.Singleton)
@@ -46,6 +48,7 @@ namespace AvatarSpeaker.DI
 
             // View
             builder.RegisterInstance(_speakerCameraView);
+            builder.RegisterInstance(_subtitleViewPrefab);
             builder.RegisterEntryPoint<RoomSpaceViewBinder>()
                 .WithParameter(_speakerAnimatorController);
             

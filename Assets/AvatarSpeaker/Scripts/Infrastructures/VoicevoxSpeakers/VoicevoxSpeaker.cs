@@ -23,6 +23,9 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         public override GameObject GameObject { get; }
         public override Vrm10Instance Vrm10Instance { get; }
 
+        public override ReadOnlyReactiveProperty<string> CurrentSpeakingText => _currentSpeakingText;
+        private readonly ReactiveProperty<string> _currentSpeakingText = new("");
+
         /// <summary>
         /// 両目の中心の位置を顔の位置として利用する
         /// </summary>
@@ -81,6 +84,10 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                         // 音声合成のタスクが完了するまで待機
                         var result = await task;
                         ct.ThrowIfCancellationRequested();
+                        
+                        // 現在の発話中のテキストを更新
+                        _currentSpeakingText.Value = result.Text;
+
                         await voicevoxSpeakPlayer.PlayAsync(result, ctsToken);
                         autoResetUniTaskCompletionSource.TrySetResult();
                     }
@@ -91,6 +98,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                     catch (Exception e)
                     {
                         autoResetUniTaskCompletionSource.TrySetException(e);
+                    }
+                    finally
+                    {
+                        // 発話中のテキストをクリア
+                        _currentSpeakingText.Value = "";
                     }
                 })
                 .RegisterTo(_cancellationTokenSource.Token);
@@ -129,6 +141,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             _cancellationTokenSource.Cancel();
             _cancellationTokenSource.Dispose();
             _speechRegisterSubject.Dispose(true);
+            _currentSpeakingText.Dispose();
 
             Object.Destroy(_vrmGameObject);
             _onDisposeUniTaskCompletionSource.TrySetResult();

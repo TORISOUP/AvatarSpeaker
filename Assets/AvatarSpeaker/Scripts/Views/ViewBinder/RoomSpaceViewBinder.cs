@@ -3,12 +3,13 @@ using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Cushion.VRM;
+using AvatarSpeaker.Scripts.Views;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using VContainer.Unity;
 
-namespace AvatarSpeaker.Scripts.Views.ViewBinder
+namespace AvatarSpeaker.Views.ViewBinder
 {
     public sealed class RoomSpaceViewBinder : IInitializable, IDisposable
     {
@@ -17,22 +18,29 @@ namespace AvatarSpeaker.Scripts.Views.ViewBinder
         private readonly CancellationTokenSource _cts = new();
         private readonly UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundViewPrefab;
         private readonly RuntimeAnimatorController _speakerAnimatorController;
+        private readonly SubtitleView _subtitleViewPrefab;
 
         private RoomSpaceView _currentRoomSpaceView;
+        private SubtitleView _subtitleView;
 
         public RoomSpaceViewBinder(SpeakerCameraView speakerCameraViewPrefab,
             IRoomSpaceProvider roomSpaceProvider,
-            UguiRoomSpaceBackgroundView backgroundViewPrefab,
-            RuntimeAnimatorController speakerAnimatorController)
+            UguiRoomSpaceBackgroundView uguiRoomSpaceBackgroundViewPrefab,
+            RuntimeAnimatorController speakerAnimatorController,
+            SubtitleView subtitleViewPrefab)
         {
             _speakerCameraViewPrefab = speakerCameraViewPrefab;
             _roomSpaceProvider = roomSpaceProvider;
-            _uguiRoomSpaceBackgroundViewPrefab = backgroundViewPrefab;
+            _uguiRoomSpaceBackgroundViewPrefab = uguiRoomSpaceBackgroundViewPrefab;
             _speakerAnimatorController = speakerAnimatorController;
+            _subtitleViewPrefab = subtitleViewPrefab;
         }
 
         public void Initialize()
         {
+            // SubtitleViewは常に1つ存在していてよいのでここで作る
+            _subtitleView = UnityEngine.Object.Instantiate(_subtitleViewPrefab);
+            
             // RoomSpaceが生成されたらRoomSpaceViewとSpeakerCameraViewを生成
             _roomSpaceProvider.CurrentRoomSpace
                 .Where(r => r != null)
@@ -47,11 +55,15 @@ namespace AvatarSpeaker.Scripts.Views.ViewBinder
                 .OfType<Speaker, VrmSpeaker>()
                 .Subscribe(speaker =>
                 {
+                    // Speakerが更新されたときの処理
                     var speakerViewObject = new GameObject("VrmSpeakerView");
                     var speakerView = speakerViewObject.AddComponent<VrmSpeakerView>();
                     speakerView.SetVrmSpeaker(speaker, _speakerAnimatorController);
                     // ヒエラルキー上の位置を調整
                     speakerViewObject.transform.SetParent(_currentRoomSpaceView.Root.transform);
+                    
+                    // SubtitleViewにSpeakerをセット
+                    _subtitleView.SetCurrentSpeaker(speaker);
                 })
                 .RegisterTo(_cts.Token);
         }

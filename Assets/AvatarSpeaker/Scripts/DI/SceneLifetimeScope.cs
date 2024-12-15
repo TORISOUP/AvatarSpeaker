@@ -1,5 +1,5 @@
-using AvatarSpeaker.Scripts.Views;
 using AvatarSpeaker.UIs;
+using AvatarSpeaker.Views;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;

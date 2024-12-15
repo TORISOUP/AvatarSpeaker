@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Threading;
 using AvatarSpeaker.Core.Models;
@@ -26,6 +27,10 @@ namespace AvatarSpeaker.Core
 
         private readonly ReactiveProperty<SpeakParameter> _currentSpeakParameter = new(SpeakParameter.Default);
 
+        /// <summary>
+        /// 現在発話中のテキスト
+        /// </summary>
+        public abstract ReadOnlyReactiveProperty<string> CurrentSpeakingText { get; }
 
         /// <summary>
         /// SpeakerのID
