@@ -37,6 +37,7 @@ namespace AvatarSpeaker.Infrastructures.Https
         public void Stop()
         {
             if (_isDisposed) return;
+
             _cts?.Cancel();
             _cts?.Dispose();
             _cts = null;
@@ -46,13 +47,12 @@ namespace AvatarSpeaker.Infrastructures.Https
 
         private async ValueTask HandleRequestsAsync(CancellationToken ct)
         {
-            var currentSyncContext = SynchronizationContext.Current;
-
             while (!ct.IsCancellationRequested)
             {
                 try
                 {
-                    var context = await _httpListener.GetContextAsync();
+                    var context = await _httpListener.GetContextAsync().ConfigureAwait(false);
+                    ct.ThrowIfCancellationRequested();
                     var request = context.Request;
                     var response = context.Response;
                     try
@@ -73,15 +73,7 @@ namespace AvatarSpeaker.Infrastructures.Https
                                 continue;
                             }
 
-                            if (currentSyncContext != null)
-                            {
-                                currentSyncContext.Post(_ => OnRequestReceived?.Invoke(v), null);
-                            }
-                            else
-                            {
-                                OnRequestReceived?.Invoke(v);
-                            }
-
+                            OnRequestReceived?.Invoke(v);
 
                             response.StatusCode = (int)HttpStatusCode.OK;
                             response.Close();
@@ -99,6 +91,10 @@ namespace AvatarSpeaker.Infrastructures.Https
                         response.Close();
                     }
                 }
+                catch (ObjectDisposedException)
+                {
+                    // ignore
+                }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
                     Debug.LogException(ex);
@@ -109,9 +105,9 @@ namespace AvatarSpeaker.Infrastructures.Https
         public void Dispose()
         {
             if (_isDisposed) return;
-            _isDisposed = true;
             Stop();
             ((IDisposable)_httpListener)?.Dispose();
+            _isDisposed = true;
         }
     }
 }
