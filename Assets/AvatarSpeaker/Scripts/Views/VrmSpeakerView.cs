@@ -3,10 +3,10 @@ using System.Threading;
 using AvatarSpeaker.Core.Models;
 using AvatarSpeaker.Cushion.VRM;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using R3;
+using UnityEngine;
 
-namespace AvatarSpeaker.Scripts.Views
+namespace AvatarSpeaker.Views
 {
     public sealed class VrmSpeakerView : MonoBehaviour
     {

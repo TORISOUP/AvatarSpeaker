@@ -2,7 +2,7 @@ using AvatarSpeaker.Core;
 using R3;
 using UnityEngine;
 
-namespace AvatarSpeaker.Scripts.Views
+namespace AvatarSpeaker.Views
 {
     public sealed class SpeakerCameraView : MonoBehaviour
     {

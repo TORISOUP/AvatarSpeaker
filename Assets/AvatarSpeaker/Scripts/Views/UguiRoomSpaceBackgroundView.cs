@@ -1,9 +1,9 @@
 using AvatarSpeaker.Core;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
-using R3;
 
-namespace AvatarSpeaker.Scripts.Views
+namespace AvatarSpeaker.Views
 {
     /// <summary>
     /// BackgroundViewのuGUI実装

@@ -2,7 +2,7 @@ using System;
 using AvatarSpeaker.Core;
 using UnityEngine;
 
-namespace AvatarSpeaker.Scripts.Views
+namespace AvatarSpeaker.Views
 {
     /// <summary>
     /// RoomSpaceに紐づくView

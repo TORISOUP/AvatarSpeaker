@@ -1,7 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace AvatarSpeaker.Core
+namespace AvatarSpeaker.Core.Interfaces
 {
     public interface ISpeakerSourceProvider
     {

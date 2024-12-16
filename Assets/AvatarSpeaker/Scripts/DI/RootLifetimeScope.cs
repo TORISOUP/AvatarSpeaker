@@ -9,7 +9,6 @@ using AvatarSpeaker.Infrastructures.RoomSpaces;
 using AvatarSpeaker.Infrastructures.SpeakerSources;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using AvatarSpeaker.Infrastructures.VoicevoxSpeakers;
-using AvatarSpeaker.Scripts.Views;
 using AvatarSpeaker.StartUp;
 using AvatarSpeaker.UseCases;
 using AvatarSpeaker.Views;
