@@ -78,6 +78,8 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             _speechRegisterSubject
                 .SubscribeAwait(async (values, ct) =>
                 {
+                    if(voicevoxSpeakPlayer == null) return;
+                    
                     var (task, autoResetUniTaskCompletionSource, ctsToken) = values;
                     try
                     {

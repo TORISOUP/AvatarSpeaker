@@ -6,22 +6,43 @@ namespace AvatarSpeaker.Core.Configurations
     /// <summary>
     /// 現在のアプリケーション内での設定値を表す
     /// </summary>
-    public sealed class CurrentConfigurationRepository : IDisposable
+    public interface IConfigurationRepository
     {
-        public ReadOnlyReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings =>
-            _voiceControlConnectionSettings;
+        /// <summary>
+        /// 「音声の制御」を行うための接続設定
+        /// </summary>
+        ReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings { get; }
 
-        private readonly ReactiveProperty<VoiceControlConnectionSettings> _voiceControlConnectionSettings;
+        /// <summary>
+        /// Httpサーバーの設定
+        /// </summary>
+        ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
+    }
 
-        public CurrentConfigurationRepository(VoiceControlConnectionSettings voiceControlConnectionSettings)
+    public readonly struct HttpServerSettings : IEquatable<HttpServerSettings>
+    {
+        public int Port { get; }
+        public bool IsEnabled { get; }
+
+        public HttpServerSettings(int port, bool isEnabled)
         {
-            _voiceControlConnectionSettings =
-                new ReactiveProperty<VoiceControlConnectionSettings>(voiceControlConnectionSettings);
+            Port = port;
+            IsEnabled = isEnabled;
         }
 
-        public void Dispose()
+        public bool Equals(HttpServerSettings other)
         {
-            _voiceControlConnectionSettings.Dispose();
+            return Port == other.Port && IsEnabled == other.IsEnabled;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is HttpServerSettings other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Port, IsEnabled);
         }
     }
 

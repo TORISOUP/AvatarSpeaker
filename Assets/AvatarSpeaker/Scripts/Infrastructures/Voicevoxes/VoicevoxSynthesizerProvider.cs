@@ -1,5 +1,6 @@
 using System;
 using AvatarSpeaker.Core.Configurations;
+using AvatarSpeaker.Infrastructures.Configurations;
 using R3;
 using VoicevoxClientSharp;
 using VoicevoxClientSharp.ApiClient;
@@ -16,7 +17,7 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
         private IVoicevoxApiClient _currentApiClient;
         private readonly IDisposable _disposable;
 
-        public VoicevoxSynthesizerProvider(CurrentConfigurationRepository configurationRepository)
+        public VoicevoxSynthesizerProvider(IConfigurationRepository configurationRepository)
         {
             _disposable = configurationRepository.VoiceControlConnectionSettings.Subscribe(ChangeConnectionSettings);
         }

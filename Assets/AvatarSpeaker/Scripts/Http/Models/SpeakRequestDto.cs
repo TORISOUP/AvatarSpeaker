@@ -1,7 +1,7 @@
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 
-namespace AvatarSpeaker.Infrastructures.Https
+namespace AvatarSpeaker.Http.Models
 {
     [DataContract(Name = "SpeakRequest")]
     public class SpeakRequestDto
