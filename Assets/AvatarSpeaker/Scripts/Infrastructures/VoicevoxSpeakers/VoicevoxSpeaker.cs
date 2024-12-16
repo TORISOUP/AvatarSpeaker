@@ -78,15 +78,15 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             _speechRegisterSubject
                 .SubscribeAwait(async (values, ct) =>
                 {
-                    if(voicevoxSpeakPlayer == null) return;
-                    
+                    if (voicevoxSpeakPlayer == null) return;
+
                     var (task, autoResetUniTaskCompletionSource, ctsToken) = values;
                     try
                     {
                         // 音声合成のタスクが完了するまで待機
                         var result = await task;
                         ct.ThrowIfCancellationRequested();
-                        
+
                         // 現在の発話中のテキストを更新
                         _currentSpeakingText.Value = result.Text;
 
@@ -113,20 +113,24 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public override async UniTask SpeakAsync(string text, CancellationToken ct)
         {
+            var speakParameter = CurrentSpeakParameter.CurrentValue;
+            await SpeakAsync(text, speakParameter, ct);
+        }
+
+        public override async UniTask SpeakAsync(string text, SpeakParameter speakParameter, CancellationToken ct)
+        {
             var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
             var synthesiser = _voicevoxSynthesizerProvider.Current.CurrentValue;
 
-            var speakRequest = this.CurrentSpeakParameter.CurrentValue;
-
             // Voicevoxの音声合成を開始
             var task = synthesiser.SynthesizeSpeechAsync(
                 text: text,
-                styleId: speakRequest.Style.Id,
-                speedScale: (decimal)speakRequest.SpeedScale,
-                pitchScale: (decimal)speakRequest.PitchScale,
-                volumeScale: (decimal)speakRequest.VolumeScale,
+                styleId: speakParameter.Style.Id,
+                speedScale: (decimal)speakParameter.SpeedScale,
+                pitchScale: (decimal)speakParameter.PitchScale,
+                volumeScale: (decimal)speakParameter.VolumeScale,
                 cancellationToken: lcts.Token);
 
             // Observableを非同期処理を行えるQueueとして利用

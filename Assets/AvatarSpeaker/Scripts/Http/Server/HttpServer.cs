@@ -23,7 +23,6 @@ namespace AvatarSpeaker.Http.Server
         public HttpServer()
         {
             _httpListener = new HttpListener();
-
         }
 
         private void AddGet(string localPath, Handler handler) => Method("GET", localPath, handler);
@@ -40,7 +39,7 @@ namespace AvatarSpeaker.Http.Server
         public void Start(int port)
         {
             if (_isDisposed) throw new ObjectDisposedException(nameof(HttpServer));
-            
+
             Stop();
             _cts = new CancellationTokenSource();
 
@@ -76,6 +75,7 @@ namespace AvatarSpeaker.Http.Server
                     {
                         if (_routes.TryGetValue((request.HttpMethod, request.Url.LocalPath), out var handler))
                         {
+                            await UniTask.SwitchToMainThread();
                             await handler(request, response, ct);
                         }
                         else

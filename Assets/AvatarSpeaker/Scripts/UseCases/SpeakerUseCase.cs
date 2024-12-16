@@ -24,7 +24,7 @@ namespace AvatarSpeaker.UseCases
         /// RoomSpaceのSpeakerが変更されたときに発行されるObservable
         /// </summary>
         public Observable<Speaker?> OnSpeakerChanged { get; }
-        
+
         public SpeakerUseCase(ISpeakerSourceProvider speakerSourceProvider,
             IRoomSpaceProvider roomSpaceProvider,
             ISpeakStyleProvider speakStyleProvider)
@@ -54,7 +54,7 @@ namespace AvatarSpeaker.UseCases
         /// <summary>
         /// 使用可能なSpeakStyleを一覧で取得する
         /// </summary>
-        public UniTask<SpeakStyle[]> GetSpeechStylesAsync(CancellationToken ct)
+        public UniTask<SpeakStyle[]> GetSpeakStylesAsync(CancellationToken ct)
         {
             return _speakStyleProvider.GetSpeechStylesAsync(ct);
         }
@@ -77,8 +77,28 @@ namespace AvatarSpeaker.UseCases
 
             await speaker.SpeakAsync(text, ct);
         }
-        
-        
+
+        /// <summary>
+        /// 現在のRoomSpaceのSpeakerを発話させる
+        /// </summary>
+        public async UniTask SpeakByCurrentSpeakerAsync(string text,
+            SpeakParameter speakParameter,
+            CancellationToken ct)
+        {
+            // 現在のRoomSpaceのSpeakerを取得して発話させる
+            var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
+                .FirstAsync(x => x != null, ct)!;
+
+            var speaker = roomSpace.CurrentSpeaker.CurrentValue;
+            if (speaker == null)
+            {
+                return;
+            }
+
+            await speaker.SpeakAsync(text, speakParameter, ct);
+        }
+
+
         public void ChangeIdlePoseToCurrentSpeaker(IdlePose idlePose)
         {
             var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
@@ -95,7 +115,7 @@ namespace AvatarSpeaker.UseCases
 
             speaker.ChangeIdlePose(idlePose);
         }
-        
+
         public Speaker? GetCurrentSpeaker()
         {
             var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;

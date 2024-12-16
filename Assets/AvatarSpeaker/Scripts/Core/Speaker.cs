@@ -48,9 +48,14 @@ namespace AvatarSpeaker.Core
         public abstract Vector3 BodyForward { get; }
 
         /// <summary>
-        /// Speakerに発話させる
+        /// 現在Speakerが保持する設定値で発話させる
         /// </summary>
         public abstract UniTask SpeakAsync(string text, CancellationToken ct);
+
+        /// <summary>
+        /// Speakerに発話させる
+        /// </summary>
+        public abstract UniTask SpeakAsync(string text, SpeakParameter speakParameter, CancellationToken ct);
 
 
         /// <summary>
@@ -72,6 +77,9 @@ namespace AvatarSpeaker.Core
         /// </summary>
         public void ChangeSpeakParameter(SpeakParameter speakParameter)
         {
+            // 無効な値の場合は変更しない
+            if (!speakParameter.Validate()) return;
+            
             _currentSpeakParameter.Value = speakParameter;
         }
 
