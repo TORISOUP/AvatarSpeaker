@@ -3,7 +3,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace AvatarSpeaker.Views
+namespace AvatarSpeaker.Views.RoomSpaces
 {
     /// <summary>
     /// BackgroundViewのuGUI実装

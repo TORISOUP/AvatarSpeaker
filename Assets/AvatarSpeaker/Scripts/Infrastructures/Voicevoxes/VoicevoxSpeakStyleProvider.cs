@@ -7,6 +7,10 @@ using R3;
 
 namespace AvatarSpeaker.Infrastructures.Voicevoxes
 {
+    /// <summary>
+    /// 現在のアプリケーション上で有効なSpeakStyleを提供する
+    /// VOICEVOX実装版
+    /// </summary>
     public sealed class VoicevoxSpeakStyleProvider : ISpeakStyleProvider
     {
         private readonly VoicevoxProvider _voicevoxProvider;

@@ -9,6 +9,9 @@ using AvatarSpeaker.UseCases;
 
 namespace AvatarSpeaker.Http
 {
+    /// <summary>
+    /// /api/v1/misc/
+    /// </summary>
     public class MiscController : BaseController
     {
         private readonly SpeakerUseCase _speakerUseCase;

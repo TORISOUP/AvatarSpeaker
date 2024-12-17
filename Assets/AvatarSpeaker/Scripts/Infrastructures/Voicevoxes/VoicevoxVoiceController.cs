@@ -5,6 +5,9 @@ using Cysharp.Threading.Tasks;
 
 namespace AvatarSpeaker.Infrastructures.Voicevoxes
 {
+    /// <summary>
+    /// VOICEVOXに対する制御を行う
+    /// </summary>
     public sealed class VoicevoxVoiceController : IVoiceController
     {
         private readonly VoicevoxProvider _voicevoxProvider;

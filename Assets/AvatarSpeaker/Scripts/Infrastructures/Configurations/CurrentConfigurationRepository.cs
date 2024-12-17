@@ -16,7 +16,6 @@ namespace AvatarSpeaker.Infrastructures.Configurations
 
         public ReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings { get; }
         public ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
-
         public ReactiveProperty<bool> IsSubtitleEnabled { get; }　= new(true);
 
 

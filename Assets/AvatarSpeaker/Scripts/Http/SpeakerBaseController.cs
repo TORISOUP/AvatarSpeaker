@@ -9,6 +9,9 @@ using Cysharp.Threading.Tasks;
 
 namespace AvatarSpeaker.Http
 {
+    /// <summary>
+    /// /api/v1/speakers/
+    /// </summary>
     public sealed class SpeakerBaseController : BaseController
     {
         private readonly SpeakerUseCase _speakerUseCase;

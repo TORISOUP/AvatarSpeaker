@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AvatarSpeaker.Http.Server
 {
+    /// <summary>
+    /// Controllerの基底
+    /// </summary>
     public class BaseController
     {
         internal async ValueTask<T> ReadAsJson<T>(

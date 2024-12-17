@@ -1,6 +1,6 @@
 using UnityEngine.Scripting;
 
-namespace AvatarSpeaker.Http
+namespace AvatarSpeaker.Http.Server
 {
     public abstract class RouterAttribute : PreserveAttribute
     {

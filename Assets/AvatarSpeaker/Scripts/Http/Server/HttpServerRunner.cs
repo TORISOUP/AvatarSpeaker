@@ -6,6 +6,9 @@ using R3;
 
 namespace AvatarSpeaker.Http.Server
 {
+    /// <summary>
+    /// HTTPServerの実行を管理する
+    /// </summary>
     public sealed class HttpServerRunner : IDisposable
     {
         private readonly IConfigurationRepository _configurationRepository;
@@ -13,8 +16,7 @@ namespace AvatarSpeaker.Http.Server
         private readonly IEnumerable<BaseController> _controllers;
         private readonly CancellationTokenSource _cts = new();
         private readonly HttpServer _currentHttpServer;
-
-
+        
         public HttpServerRunner(IEnumerable<BaseController> controllers,
             IConfigurationRepository configurationRepository)
         {

@@ -2,7 +2,7 @@ using AvatarSpeaker.Core;
 using R3;
 using UnityEngine;
 
-namespace AvatarSpeaker.Views
+namespace AvatarSpeaker.Views.RoomSpaces
 {
     public sealed class SpeakerCameraView : MonoBehaviour
     {
@@ -11,7 +11,6 @@ namespace AvatarSpeaker.Views
         private SpeakerCamera _speakerCamera;
 
         public Camera Camera => _camera;
-
 
         public void Initialize(SpeakerCamera speakerCamera)
         {

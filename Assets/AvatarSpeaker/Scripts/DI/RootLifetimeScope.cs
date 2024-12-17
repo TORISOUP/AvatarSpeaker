@@ -11,6 +11,7 @@ using AvatarSpeaker.Infrastructures.VoicevoxSpeakers;
 using AvatarSpeaker.StartUp;
 using AvatarSpeaker.UseCases;
 using AvatarSpeaker.Views;
+using AvatarSpeaker.Views.RoomSpaces;
 using AvatarSpeaker.Views.ViewBinder;
 using UnityEngine;
 using VContainer;
@@ -29,15 +30,7 @@ namespace AvatarSpeaker.DI
         {
             // StartUp
             builder.RegisterEntryPoint<ApplicationStartUp>();
-
-            // SpeakerSource
-            builder.Register<LocalSpeakerSourceProvider>(Lifetime.Singleton)
-                .AsImplementedInterfaces();
-
-            // RoomSpace
-            builder.Register<RoomSpaceProviderImpl>(Lifetime.Singleton)
-                .AsImplementedInterfaces();
-
+            
             // UseCases
             builder.Register<SpeakerUseCase>(Lifetime.Singleton).As<IDisposable>().AsSelf();
             builder.Register<RoomSpaceUseCase>(Lifetime.Singleton);
@@ -50,27 +43,28 @@ namespace AvatarSpeaker.DI
             builder.RegisterInstance(_subtitleViewPrefab);
             builder.RegisterEntryPoint<RoomSpaceViewBinder>()
                 .WithParameter(_speakerAnimatorController);
-
             builder.RegisterInstance(_uguiRoomSpaceBackgroundView);
-
-            //
-            builder.Register<VoicevoxSpeakerProvider>(Lifetime.Singleton).As<ISpeakerProvider, IDisposable>();
 
             // Infrastructures
             builder.Register<VoicevoxSpeakStyleProvider>(Lifetime.Singleton).As<ISpeakStyleProvider>();
             builder.Register<VoicevoxVoiceController>(Lifetime.Singleton).As<IVoiceController>();
+            builder.Register<VoicevoxSpeakerProvider>(Lifetime.Singleton).As<ISpeakerProvider, IDisposable>();
+            builder.Register<CurrentConfigurationRepository>(Lifetime.Singleton)
+                .WithParameter(new VoiceControlConnectionSettings("http://localhost:50021"))
+                .WithParameter(new HttpServerSettings(21012, true))
+                .AsImplementedInterfaces();
+            builder.Register<VoicevoxProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
+            // SpeakerSource
+            builder.Register<LocalSpeakerSourceProvider>(Lifetime.Singleton)
+                .AsImplementedInterfaces();
+            // RoomSpace
+            builder.Register<RoomSpaceProviderImpl>(Lifetime.Singleton)
+                .AsImplementedInterfaces();
 
             // Http
             builder.Register<HttpServerRunner>(Lifetime.Singleton);
             builder.Register<SpeakerBaseController>(Lifetime.Singleton).As<BaseController>();
             builder.Register<MiscController>(Lifetime.Singleton).As<BaseController>();
-
-            builder.Register<CurrentConfigurationRepository>(Lifetime.Singleton)
-                .WithParameter(new VoiceControlConnectionSettings("http://localhost:50021"))
-                .WithParameter(new HttpServerSettings(21012, true))
-                .AsImplementedInterfaces();
-
-            builder.Register<VoicevoxProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
         }
     }
 }

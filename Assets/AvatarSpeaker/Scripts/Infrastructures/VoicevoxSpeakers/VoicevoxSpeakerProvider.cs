@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 {
     /// <summary>
-    /// VOICEVOXを利用したSpeaker実装
+    /// VOICEVOXを利用したSpeaker実装を提供する
     /// </summary>
     public sealed class VoicevoxSpeakerProvider : ISpeakerProvider, ISpeakerSourceVisitor<Speaker>, IDisposable
     {

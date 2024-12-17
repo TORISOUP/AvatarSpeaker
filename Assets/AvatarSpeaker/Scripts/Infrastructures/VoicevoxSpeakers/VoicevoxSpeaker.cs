@@ -14,6 +14,9 @@ using Object = UnityEngine.Object;
 
 namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 {
+    /// <summary>
+    /// SpeakerのVOICEVOXとVRM実装
+    /// </summary>
     public class VoicevoxSpeaker : VrmSpeaker
     {
         private readonly Animator _animator;

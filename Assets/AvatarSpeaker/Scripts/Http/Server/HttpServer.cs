@@ -9,22 +9,19 @@ using UnityEngine;
 
 namespace AvatarSpeaker.Http.Server
 {
+    /// <summary>
+    /// HTTPサーバー
+    /// </summary>
     public sealed class HttpServer : IDisposable
     {
-        public delegate ValueTask Handler(HttpListenerRequest req, HttpListenerResponse res, CancellationToken ct);
+        private delegate ValueTask Handler(HttpListenerRequest req, HttpListenerResponse res, CancellationToken ct);
 
-        private readonly HttpListener _httpListener;
+        private readonly HttpListener _httpListener = new();
 
         private readonly Dictionary<(string, string), Handler> _routes = new();
         private CancellationTokenSource _cts = new();
         private bool _isDisposed;
-
-
-        public HttpServer()
-        {
-            _httpListener = new HttpListener();
-        }
-
+        
         public void Dispose()
         {
             if (_isDisposed) return;
@@ -83,6 +80,7 @@ namespace AvatarSpeaker.Http.Server
                     {
                         if (_routes.TryGetValue((request.HttpMethod, request.Url.LocalPath), out var handler))
                         {
+                            // メインスレッドに切り替えてから処理
                             await UniTask.SwitchToMainThread();
                             await handler(request, response, ct);
                         }

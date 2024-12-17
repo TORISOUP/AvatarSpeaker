@@ -1,8 +1,7 @@
-using System;
 using AvatarSpeaker.Core;
 using UnityEngine;
 
-namespace AvatarSpeaker.Views
+namespace AvatarSpeaker.Views.RoomSpaces
 {
     /// <summary>
     /// RoomSpaceに紐づくView
@@ -13,8 +12,7 @@ namespace AvatarSpeaker.Views
         private RoomSpace _roomSpace;
         private SpeakerCameraView _speakerCameraView;
         public GameObject Root { get; private set; }
-
-
+        
         private void OnDestroy()
         {
             if (_speakerCameraView != null) Destroy(_speakerCameraView.gameObject);
@@ -43,8 +41,4 @@ namespace AvatarSpeaker.Views
         }
     }
 
-    public interface IBackgroundView : IDisposable
-    {
-        GameObject Root { get; }
-    }
 }

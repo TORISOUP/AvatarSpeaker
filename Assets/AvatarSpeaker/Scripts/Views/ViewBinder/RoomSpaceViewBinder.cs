@@ -4,6 +4,7 @@ using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Configurations;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Cushion.VRM;
+using AvatarSpeaker.Views.RoomSpaces;
 using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
@@ -12,6 +13,9 @@ using Object = UnityEngine.Object;
 
 namespace AvatarSpeaker.Views.ViewBinder
 {
+    /// <summary>
+    /// RoomSpace内で生成されたオブジェクトをViewにバインドする
+    /// </summary>
     public sealed class RoomSpaceViewBinder : IInitializable, IDisposable
     {
         private readonly IConfigurationRepository _configurationRepository;
@@ -58,17 +62,22 @@ namespace AvatarSpeaker.Views.ViewBinder
                 .RegisterTo(_cts.Token);
 
             // RoomSpaceのSpeakerが変更されたらSpeakerViewを更新
-            // ただし生成はVrmSpeakerに限る
+            // ただしここで生成できるものはVrmSpeakerに限る
             _roomSpaceProvider.CurrentRoomSpace
                 .Where(r => r != null)
                 .SelectMany(r => r.CurrentSpeaker)
                 .OfType<Speaker, VrmSpeaker>()
                 .Subscribe(speaker =>
                 {
-                    // Speakerが更新されたときの処理
+                    // Speakerが更新されたとき
+                    
+                    // SpeakerViewを生成
+                    // 実体はInfrastructures.VoicevoxSpeakersで生成されたGameObjectなので、
+                    // SpeakerViewはそれをネストして保持するだけの空オブジェクト
                     var speakerViewObject = new GameObject("VrmSpeakerView");
                     var speakerView = speakerViewObject.AddComponent<VrmSpeakerView>();
                     speakerView.SetVrmSpeaker(speaker, _speakerAnimatorController);
+
                     // ヒエラルキー上の位置を調整
                     speakerViewObject.transform.SetParent(_currentRoomSpaceView.Root.transform);
 
@@ -78,6 +87,9 @@ namespace AvatarSpeaker.Views.ViewBinder
                 .RegisterTo(_cts.Token);
         }
 
+        /// <summary>
+        /// RoomSpaceが生成されたときの処理
+        /// </summary>
         private async UniTask CreateRoomSpaceViews(RoomSpace roomSpace, CancellationToken ct)
         {
             if (roomSpace == null) return;
@@ -90,6 +102,7 @@ namespace AvatarSpeaker.Views.ViewBinder
             speakerCameraView.Initialize(roomSpace.SpeakerCamera);
 
             // UguiRoomSpaceBackgroundViewを生成
+            // 背景の実装はいくつか考えられるが、今回は「uGUI実装版」を使うことにする
             var backgroundView = Object.Instantiate(_uguiRoomSpaceBackgroundViewPrefab);
             backgroundView.Initalize(roomSpace, speakerCameraView.Camera);
 
@@ -106,6 +119,7 @@ namespace AvatarSpeaker.Views.ViewBinder
             _currentRoomSpaceView = null;
 
             // RoomSpaceViewを破棄
+            // 同時にRoomSpaceViewに紐づいているSpeakerCameraViewなどもまとめて破棄される
             Object.Destroy(roomSpaceView.Root);
         }
     }
