@@ -11,17 +11,27 @@ namespace AvatarSpeaker.UIs
         [SerializeField] private Canvas _speakerSubCanvas;
         [SerializeField] private Canvas _roomSpaceSubCanvas;
         [SerializeField] private Canvas _cameraSubCanvas;
+        [SerializeField] private Canvas _settingsSubCanvas;
 
         /// <summary>
         /// UIを使用中かどうか
         /// </summary>
         public AsyncReactiveProperty<bool> IsUiUsing { get; } = new(false);
-        
+
+        private void Start()
+        {
+            _speakerSubCanvas.gameObject.SetActive(true);
+            _roomSpaceSubCanvas.gameObject.SetActive(true);
+            _cameraSubCanvas.gameObject.SetActive(true);
+            _settingsSubCanvas.gameObject.SetActive(true);
+        }
+
         public void OpenAvatarSubCanvas()
         {
             _speakerSubCanvas.enabled = true;
             _roomSpaceSubCanvas.enabled = false;
             _cameraSubCanvas.enabled = false;
+            _settingsSubCanvas.enabled = false;
         }
 
         public void OpenRoomSpaceSubCanvas()
@@ -29,6 +39,7 @@ namespace AvatarSpeaker.UIs
             _speakerSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = true;
             _cameraSubCanvas.enabled = false;
+            _settingsSubCanvas.enabled = false;
         }
 
         public void OpenCameraSubCanvas()
@@ -36,6 +47,15 @@ namespace AvatarSpeaker.UIs
             _speakerSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = false;
             _cameraSubCanvas.enabled = true;
+            _settingsSubCanvas.enabled = false;
+        }
+        
+        public void OpenSettingsSubCanvas()
+        {
+            _speakerSubCanvas.enabled = false;
+            _roomSpaceSubCanvas.enabled = false;
+            _cameraSubCanvas.enabled = false;
+            _settingsSubCanvas.enabled = true;
         }
 
         public void OpenMainUI()
@@ -43,6 +63,7 @@ namespace AvatarSpeaker.UIs
             _mainCanvas.enabled = true;
             _cameraSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = false;
+            _settingsSubCanvas.enabled = false;
             _speakerSubCanvas.enabled = true;
             IsUiUsing.Value = true;
         }
@@ -53,6 +74,7 @@ namespace AvatarSpeaker.UIs
             _cameraSubCanvas.enabled = false;
             _roomSpaceSubCanvas.enabled = false;
             _speakerSubCanvas.enabled = false;
+            _settingsSubCanvas.enabled = false;
             IsUiUsing.Value = false;
         }
 

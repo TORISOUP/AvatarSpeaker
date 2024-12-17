@@ -13,11 +13,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
     /// </summary>
     public sealed class VoicevoxSpeakerProvider : ISpeakerProvider, ISpeakerSourceVisitor<Speaker>, IDisposable
     {
-        private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
+        private readonly VoicevoxProvider _voicevoxProvider;
 
-        public VoicevoxSpeakerProvider(VoicevoxSynthesizerProvider voicevoxSynthesizerProvider)
+        public VoicevoxSpeakerProvider(VoicevoxProvider voicevoxProvider)
         {
-            _voicevoxSynthesizerProvider = voicevoxSynthesizerProvider;
+            _voicevoxProvider = voicevoxProvider;
         }
 
         public UniTask<Speaker> LoadSpeakerAsync(ISpeakerSource source, CancellationToken ct)
@@ -35,7 +35,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             }
 
             // Speakerを生成
-            var speaker = new VoicevoxSpeaker(vrmInstance, _voicevoxSynthesizerProvider);
+            var speaker = new VoicevoxSpeaker(vrmInstance, _voicevoxProvider);
             return speaker;
         }
 

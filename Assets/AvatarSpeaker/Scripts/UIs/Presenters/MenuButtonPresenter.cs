@@ -13,6 +13,7 @@ namespace AvatarSpeaker.UIs.Presenters
         [SerializeField] private Button _avatarButton;
         [SerializeField] private Button _roomSpaceButton;
         [SerializeField] private Button _cameraButton;
+        [SerializeField] private Button _settingsButton;
 
         [Inject]
         public void Inject(UiController uiController)
@@ -30,6 +31,9 @@ namespace AvatarSpeaker.UIs.Presenters
 
             _avatarButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
                 .Subscribe(_ => _uiController.OpenAvatarSubCanvas());
+
+            _settingsButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
+                .Subscribe(_ => _uiController.OpenSettingsSubCanvas());
         }
     }
 }

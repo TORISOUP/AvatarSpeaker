@@ -10,20 +10,20 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
 {
     public sealed class VoicevoxSpeakStyleProvider : ISpeakStyleProvider
     {
-        private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
+        private readonly VoicevoxProvider _voicevoxProvider;
 
-        public VoicevoxSpeakStyleProvider(VoicevoxSynthesizerProvider voicevoxSynthesizerProvider)
+        public VoicevoxSpeakStyleProvider(VoicevoxProvider voicevoxProvider)
         {
-            _voicevoxSynthesizerProvider = voicevoxSynthesizerProvider;
+            _voicevoxProvider = voicevoxProvider;
         }
 
         /// <summary>
         /// Voicevoxから使用可能なSpeakStyleを取得する
         /// </summary>
-        public async UniTask<SpeakStyle[]> GetSpeechStylesAsync(CancellationToken ct)
+        public async UniTask<SpeakStyle[]> GetSpeakStylesAsync(CancellationToken ct)
         {
             var synthesizer =
-                await _voicevoxSynthesizerProvider.Current.FirstAsync(x => x != null, cancellationToken: ct);
+                await _voicevoxProvider.Synthesizer.FirstAsync(x => x != null, cancellationToken: ct);
 
             // ここの「Speaker」は「VoicevoxClientSharp.Speaker」
             var voicevoxSpeakers = await synthesizer.GetSpeakersAsync(ct);

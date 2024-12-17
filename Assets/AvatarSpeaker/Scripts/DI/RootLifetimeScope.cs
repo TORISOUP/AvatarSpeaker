@@ -43,6 +43,8 @@ namespace AvatarSpeaker.DI
             builder.Register<SpeakerUseCase>(Lifetime.Singleton).As<IDisposable>().AsSelf();
             builder.Register<RoomSpaceUseCase>(Lifetime.Singleton);
             builder.Register<SpeakerCameraUseCase>(Lifetime.Singleton);
+            builder.Register<ConfigurationUseCase>(Lifetime.Singleton);
+            builder.Register<VoiceControlUseCase>(Lifetime.Singleton);
 
             // View
             builder.RegisterInstance(_speakerCameraView);
@@ -57,6 +59,7 @@ namespace AvatarSpeaker.DI
             
             // Infrastructures
             builder.Register<VoicevoxSpeakStyleProvider>(Lifetime.Singleton).As<ISpeakStyleProvider>();
+            builder.Register<VoicevoxVoiceController>(Lifetime.Singleton).As<IVoiceController>();
             
             // Http
             builder.Register<HttpServerRunner>(Lifetime.Singleton);
@@ -68,7 +71,7 @@ namespace AvatarSpeaker.DI
                 .WithParameter(new HttpServerSettings(21012, true))
                 .AsImplementedInterfaces();
 
-            builder.Register<VoicevoxSynthesizerProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
+            builder.Register<VoicevoxProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using AvatarSpeaker.Core;
+using AvatarSpeaker.Core.Configurations;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Cushion.VRM;
 using Cysharp.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace AvatarSpeaker.Views.ViewBinder
         private readonly UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundViewPrefab;
         private readonly RuntimeAnimatorController _speakerAnimatorController;
         private readonly SubtitleView _subtitleViewPrefab;
+        private readonly IConfigurationRepository _configurationRepository;
 
         private RoomSpaceView _currentRoomSpaceView;
         private SubtitleView _subtitleView;
@@ -26,20 +28,22 @@ namespace AvatarSpeaker.Views.ViewBinder
             IRoomSpaceProvider roomSpaceProvider,
             UguiRoomSpaceBackgroundView uguiRoomSpaceBackgroundViewPrefab,
             RuntimeAnimatorController speakerAnimatorController,
-            SubtitleView subtitleViewPrefab)
+            SubtitleView subtitleViewPrefab,
+            IConfigurationRepository configurationRepository)
         {
             _speakerCameraViewPrefab = speakerCameraViewPrefab;
             _roomSpaceProvider = roomSpaceProvider;
             _uguiRoomSpaceBackgroundViewPrefab = uguiRoomSpaceBackgroundViewPrefab;
             _speakerAnimatorController = speakerAnimatorController;
             _subtitleViewPrefab = subtitleViewPrefab;
+            _configurationRepository = configurationRepository;
         }
 
         public void Initialize()
         {
             // SubtitleViewは常に1つ存在していてよいのでここで作る
             _subtitleView = UnityEngine.Object.Instantiate(_subtitleViewPrefab);
-            
+
             // RoomSpaceが生成されたらRoomSpaceViewとSpeakerCameraViewを生成
             _roomSpaceProvider.CurrentRoomSpace
                 .Where(r => r != null)
@@ -60,9 +64,9 @@ namespace AvatarSpeaker.Views.ViewBinder
                     speakerView.SetVrmSpeaker(speaker, _speakerAnimatorController);
                     // ヒエラルキー上の位置を調整
                     speakerViewObject.transform.SetParent(_currentRoomSpaceView.Root.transform);
-                    
+
                     // SubtitleViewにSpeakerをセット
-                    _subtitleView.SetCurrentSpeaker(speaker);
+                    _subtitleView.SetUp(speaker, _configurationRepository.IsSubtitleEnabled);
                 })
                 .RegisterTo(_cts.Token);
         }

@@ -54,8 +54,8 @@ namespace AvatarSpeaker.UIs.Presenters
                     {
                         _speakButton.interactable = false;
                         var text = _textInputField.text;
-                        await _speakerUseCase.SpeakByCurrentSpeakerAsync(text, ct);
                         _textInputField.text = "";
+                        await _speakerUseCase.SpeakByCurrentSpeakerAsync(text, ct);
                     }
                     finally
                     {

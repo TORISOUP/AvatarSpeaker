@@ -45,7 +45,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         public override Vector3 BodyForward => _animator.GetBoneTransform(HumanBodyBones.Chest).forward;
 
         private readonly GameObject _vrmGameObject;
-        private readonly VoicevoxSynthesizerProvider _voicevoxSynthesizerProvider;
+        private readonly VoicevoxProvider _voicevoxProvider;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly Animator _animator;
 
@@ -55,7 +55,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
 
-        public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxSynthesizerProvider synthesizerProvider)
+        public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxProvider provider)
         {
             GameObject = vrm10Instance.gameObject;
             Vrm10Instance = vrm10Instance;
@@ -63,7 +63,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             // SpeakerのIDを設定
             Id = $"voicevox_vrm_{vrm10Instance.gameObject.GetInstanceID().ToString()}";
 
-            _voicevoxSynthesizerProvider = synthesizerProvider;
+            _voicevoxProvider = provider;
             _vrmGameObject = vrm10Instance.gameObject;
             _animator = _vrmGameObject.GetComponent<Animator>();
 
@@ -122,7 +122,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
-            var synthesiser = _voicevoxSynthesizerProvider.Current.CurrentValue;
+            var synthesiser = _voicevoxProvider.Synthesizer.CurrentValue;
 
             // Voicevoxの音声合成を開始
             var task = synthesiser.SynthesizeSpeechAsync(

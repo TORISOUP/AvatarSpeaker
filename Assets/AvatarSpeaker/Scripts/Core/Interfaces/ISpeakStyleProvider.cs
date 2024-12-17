@@ -6,6 +6,6 @@ namespace AvatarSpeaker.Core.Interfaces
 {
     public interface ISpeakStyleProvider
     {
-        UniTask<SpeakStyle[]> GetSpeechStylesAsync(CancellationToken ct);
+        UniTask<SpeakStyle[]> GetSpeakStylesAsync(CancellationToken ct);
     }
 }

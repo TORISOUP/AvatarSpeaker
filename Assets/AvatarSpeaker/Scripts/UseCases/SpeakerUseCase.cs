@@ -56,7 +56,7 @@ namespace AvatarSpeaker.UseCases
         /// </summary>
         public UniTask<SpeakStyle[]> GetSpeakStylesAsync(CancellationToken ct)
         {
-            return _speakStyleProvider.GetSpeechStylesAsync(ct);
+            return _speakStyleProvider.GetSpeakStylesAsync(ct);
         }
 
 

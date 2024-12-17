@@ -15,14 +15,20 @@ namespace AvatarSpeaker.Views
 
         private IDisposable _disposable;
 
-        public void SetCurrentSpeaker(Speaker speaker)
+        public void SetUp(Speaker speaker, ReadOnlyReactiveProperty<bool> isSubtitleEnabled)
         {
             _disposable?.Dispose();
             _disposable = speaker
                 .CurrentSpeakingText
-                .Subscribe(text => _text.text = text);
+                .CombineLatest(isSubtitleEnabled, (text, isEnabled) => (isEnabled, text))
+                .Subscribe(tp =>
+                {
+                    var (isEnabled, text) = tp;
+                    _text.gameObject.SetActive(isEnabled);
+                    _text.text = text;
+                });
         }
-        
+
         private void OnDestroy()
         {
             _disposable?.Dispose();

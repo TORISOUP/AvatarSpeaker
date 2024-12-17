@@ -9,6 +9,8 @@ namespace AvatarSpeaker.Infrastructures.Configurations
         public ReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings { get; }
         public ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
 
+        public ReactiveProperty<bool> IsSubtitleEnabled { get; }　= new(true);
+
         public CurrentConfigurationRepository(VoiceControlConnectionSettings voiceControlConnectionSettings,
             HttpServerSettings httpServerSettings)
         {
@@ -22,6 +24,7 @@ namespace AvatarSpeaker.Infrastructures.Configurations
         {
             VoiceControlConnectionSettings.Dispose(true);
             HttpServerSettings.Dispose(true);
+            IsSubtitleEnabled.Dispose(true);
         }
     }
 }
