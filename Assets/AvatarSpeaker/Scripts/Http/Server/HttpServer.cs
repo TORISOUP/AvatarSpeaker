@@ -11,13 +11,13 @@ namespace AvatarSpeaker.Http.Server
 {
     public sealed class HttpServer : IDisposable
     {
-        private readonly HttpListener _httpListener;
-        private CancellationTokenSource _cts = new();
-        private bool _isDisposed;
-
         public delegate ValueTask Handler(HttpListenerRequest req, HttpListenerResponse res, CancellationToken ct);
 
+        private readonly HttpListener _httpListener;
+
         private readonly Dictionary<(string, string), Handler> _routes = new();
+        private CancellationTokenSource _cts = new();
+        private bool _isDisposed;
 
 
         public HttpServer()
@@ -25,11 +25,19 @@ namespace AvatarSpeaker.Http.Server
             _httpListener = new HttpListener();
         }
 
+        public void Dispose()
+        {
+            if (_isDisposed) return;
+
+            Stop();
+            ((IDisposable)_httpListener)?.Dispose();
+            _isDisposed = true;
+        }
+
         private void AddGet(string localPath, Handler handler) => Method("GET", localPath, handler);
         private void AddPost(string localPath, Handler handler) => Method("POST", localPath, handler);
         private void AddPut(string localPath, Handler handler) => Method("PUT", localPath, handler);
         private void AddDelete(string localPath, Handler handler) => Method("DELETE", localPath, handler);
-
         private void Method(string httpMethod, string localPath, Handler handler)
         {
             _routes.Add((httpMethod, localPath), handler);
@@ -100,14 +108,6 @@ namespace AvatarSpeaker.Http.Server
                     Debug.LogException(ex);
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            if (_isDisposed) return;
-            Stop();
-            ((IDisposable)_httpListener)?.Dispose();
-            _isDisposed = true;
         }
 
         /// <summary>

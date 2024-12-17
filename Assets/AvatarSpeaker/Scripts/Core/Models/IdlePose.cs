@@ -6,6 +6,6 @@ namespace AvatarSpeaker.Core.Models
         Pose2,
         Pose3,
         Pose4,
-        Pose5,
+        Pose5
     }
 }

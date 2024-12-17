@@ -4,6 +4,7 @@ using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using Cysharp.Threading.Tasks;
+using UniVRM10;
 using Object = UnityEngine.Object;
 
 namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
@@ -20,6 +21,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             _voicevoxProvider = voicevoxProvider;
         }
 
+        public void Dispose()
+        {
+            // do nothing
+        }
+
         public UniTask<Speaker> LoadSpeakerAsync(ISpeakerSource source, CancellationToken ct)
         {
             return source.Accept(this, ct);
@@ -27,7 +33,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public async UniTask<Speaker> Visit(LocalSpeakerSource source, CancellationToken ct)
         {
-            var vrmInstance = await UniVRM10.Vrm10.LoadPathAsync(source.Path, ct: ct);
+            var vrmInstance = await Vrm10.LoadPathAsync(source.Path, ct: ct);
             if (ct.IsCancellationRequested)
             {
                 Object.Destroy(vrmInstance.gameObject);
@@ -37,11 +43,6 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             // Speakerを生成
             var speaker = new VoicevoxSpeaker(vrmInstance, _voicevoxProvider);
             return speaker;
-        }
-
-        public void Dispose()
-        {
-            // do nothing
         }
     }
 }

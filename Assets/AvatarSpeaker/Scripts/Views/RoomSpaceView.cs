@@ -9,10 +9,18 @@ namespace AvatarSpeaker.Views
     /// </summary>
     public sealed class RoomSpaceView : MonoBehaviour
     {
-        public GameObject Root { get; private set; }
-        private SpeakerCameraView _speakerCameraView;
         private IBackgroundView _backgroundView;
         private RoomSpace _roomSpace;
+        private SpeakerCameraView _speakerCameraView;
+        public GameObject Root { get; private set; }
+
+
+        private void OnDestroy()
+        {
+            if (_speakerCameraView != null) Destroy(_speakerCameraView.gameObject);
+
+            _backgroundView.Dispose();
+        }
 
         public void Initalize(RoomSpace roomSpace, IBackgroundView backgroundView, SpeakerCameraView speakerCameraView)
         {
@@ -21,21 +29,9 @@ namespace AvatarSpeaker.Views
             // SpeakerCameraViewを登録
             _speakerCameraView = speakerCameraView;
             _speakerCameraView.gameObject.transform.SetParent(Root.transform);
-            
+
             _backgroundView = backgroundView;
             _backgroundView.Root.transform.SetParent(Root.transform);
-
-        }
-
-
-        private void OnDestroy()
-        {
-            if (_speakerCameraView != null)
-            {
-                Destroy(_speakerCameraView.gameObject);
-            }
-            
-            _backgroundView.Dispose();
         }
 
         public static RoomSpaceView Create()

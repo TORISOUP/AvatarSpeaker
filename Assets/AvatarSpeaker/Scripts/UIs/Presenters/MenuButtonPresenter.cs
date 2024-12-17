@@ -8,18 +8,11 @@ namespace AvatarSpeaker.UIs.Presenters
 {
     public sealed class MenuButtonPresenter : MonoBehaviour
     {
-        private UiController _uiController;
-
         [SerializeField] private Button _avatarButton;
         [SerializeField] private Button _roomSpaceButton;
         [SerializeField] private Button _cameraButton;
         [SerializeField] private Button _settingsButton;
-
-        [Inject]
-        public void Inject(UiController uiController)
-        {
-            _uiController = uiController;
-        }
+        private UiController _uiController;
 
         private void Start()
         {
@@ -34,6 +27,12 @@ namespace AvatarSpeaker.UIs.Presenters
 
             _settingsButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
                 .Subscribe(_ => _uiController.OpenSettingsSubCanvas());
+        }
+
+        [Inject]
+        public void Inject(UiController uiController)
+        {
+            _uiController = uiController;
         }
     }
 }

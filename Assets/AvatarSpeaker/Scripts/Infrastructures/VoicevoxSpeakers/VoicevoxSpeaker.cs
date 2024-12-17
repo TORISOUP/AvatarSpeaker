@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Models;
 using AvatarSpeaker.Cushion.VRM;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
@@ -17,43 +16,19 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 {
     public class VoicevoxSpeaker : VrmSpeaker
     {
-        // GameObjectのIDをSpeakerのIDとして利用
-        public sealed override string Id { get; }
-
-        public override GameObject GameObject { get; }
-        public override Vrm10Instance Vrm10Instance { get; }
-
-        public override ReadOnlyReactiveProperty<string> CurrentSpeakingText => _currentSpeakingText;
+        private readonly Animator _animator;
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ReactiveProperty<string> _currentSpeakingText = new("");
 
-        /// <summary>
-        /// 両目の中心の位置を顔の位置として利用する
-        /// </summary>
-        public override Vector3 FacePosition
-        {
-            get
-            {
-                var leftEye = _animator.GetBoneTransform(HumanBodyBones.LeftEye).position;
-                var rightEye = _animator.GetBoneTransform(HumanBodyBones.RightEye).position;
-                return (leftEye + rightEye) / 2;
-            }
-        }
-
-        /// <summary>
-        /// 腰の位置をSpeakerの前方向として利用する
-        /// </summary>
-        public override Vector3 BodyForward => _animator.GetBoneTransform(HumanBodyBones.Chest).forward;
-
-        private readonly GameObject _vrmGameObject;
-        private readonly VoicevoxProvider _voicevoxProvider;
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
-        private readonly Animator _animator;
+        private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
 
         private readonly Subject<(ValueTask<SynthesisResult>, AutoResetUniTaskCompletionSource, CancellationToken)>
             _speechRegisterSubject =
                 new();
 
-        private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
+        private readonly VoicevoxProvider _voicevoxProvider;
+
+        private readonly GameObject _vrmGameObject;
 
         public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxProvider provider)
         {
@@ -110,6 +85,34 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                 .RegisterTo(_cancellationTokenSource.Token);
         }
 
+        // GameObjectのIDをSpeakerのIDとして利用
+        public sealed override string Id { get; }
+
+        public override GameObject GameObject { get; }
+        public override Vrm10Instance Vrm10Instance { get; }
+
+        public override ReadOnlyReactiveProperty<string> CurrentSpeakingText => _currentSpeakingText;
+
+        /// <summary>
+        /// 両目の中心の位置を顔の位置として利用する
+        /// </summary>
+        public override Vector3 FacePosition
+        {
+            get
+            {
+                var leftEye = _animator.GetBoneTransform(HumanBodyBones.LeftEye).position;
+                var rightEye = _animator.GetBoneTransform(HumanBodyBones.RightEye).position;
+                return (leftEye + rightEye) / 2;
+            }
+        }
+
+        /// <summary>
+        /// 腰の位置をSpeakerの前方向として利用する
+        /// </summary>
+        public override Vector3 BodyForward => _animator.GetBoneTransform(HumanBodyBones.Chest).forward;
+
+        public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
+
 
         public override async UniTask SpeakAsync(string text, CancellationToken ct)
         {
@@ -139,8 +142,6 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             // 読み上げが完了するまで待機
             await autoResetUniTaskCompletionSource.Task;
         }
-
-        public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
 
         protected override void OnDisposed()
         {

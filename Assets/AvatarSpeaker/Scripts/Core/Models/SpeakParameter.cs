@@ -47,10 +47,14 @@ namespace AvatarSpeaker.Core.Models
 
         public bool Validate()
         {
-            if(Style.Id < 0) return false;
-            if(SpeedScale < 0.5f || SpeedScale > 2.0f) return false;
-            if(PitchScale < -0.15f || PitchScale > 0.15f) return false;
-            if(VolumeScale < 0.0f || VolumeScale > 2.0f) return false;
+            if (Style.Id < 0) return false;
+
+            if (SpeedScale < 0.5f || SpeedScale > 2.0f) return false;
+
+            if (PitchScale < -0.15f || PitchScale > 0.15f) return false;
+
+            if (VolumeScale < 0.0f || VolumeScale > 2.0f) return false;
+
             return true;
         }
     }

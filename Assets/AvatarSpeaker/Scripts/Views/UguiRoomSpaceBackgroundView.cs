@@ -13,6 +13,13 @@ namespace AvatarSpeaker.Views
         [SerializeField] private Image _backGroundImage;
         [SerializeField] private Canvas _canvas;
 
+        public GameObject Root => gameObject;
+
+        public void Dispose()
+        {
+            if (gameObject != null) Destroy(gameObject);
+        }
+
         public void Initalize(RoomSpace roomSpace, Camera worldCamera)
         {
             _canvas.worldCamera = worldCamera;
@@ -21,19 +28,9 @@ namespace AvatarSpeaker.Views
                 .AddTo(this);
         }
 
-        public GameObject Root => gameObject;
-
         private void ChangeBackgroundColor(Color color)
         {
             _backGroundImage.color = color;
-        }
-
-        public void Dispose()
-        {
-            if (gameObject != null)
-            {
-                Destroy(gameObject);
-            }
         }
     }
 }

@@ -1,20 +1,20 @@
 {
-    "name": "AvatarSpeaker.StartUp",
-    "rootNamespace": "",
-    "references": [
-        "GUID:421b249bd3586874ab1d606989afcee3",
-        "GUID:280d5050e5c693e4c943f7de0bb41834",
-        "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:2ddf4fc90e386264e8a9b195fd3a1ddf"
-    ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
-    "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
-    "autoReferenced": false,
-    "defineConstraints": [],
-    "versionDefines": [],
-    "noEngineReferences": false
+  "name": "AvatarSpeaker.StartUp",
+  "rootNamespace": "",
+  "references": [
+    "GUID:421b249bd3586874ab1d606989afcee3",
+    "GUID:280d5050e5c693e4c943f7de0bb41834",
+    "GUID:b0214a6008ed146ff8f122a6a9c2f6cc",
+    "GUID:f51ebe6a0ceec4240a699833d6309b23",
+    "GUID:2ddf4fc90e386264e8a9b195fd3a1ddf"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
 }

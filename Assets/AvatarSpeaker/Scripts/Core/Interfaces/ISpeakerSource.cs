@@ -22,7 +22,10 @@ namespace AvatarSpeaker.Core.Interfaces
             Path = path;
         }
 
-        public UniTask<T> Accept<T>(ISpeakerSourceVisitor<T> visitor, CancellationToken ct) => visitor.Visit(this, ct);
+        public UniTask<T> Accept<T>(ISpeakerSourceVisitor<T> visitor, CancellationToken ct)
+        {
+            return visitor.Visit(this, ct);
+        }
 
         public override string ToString()
         {

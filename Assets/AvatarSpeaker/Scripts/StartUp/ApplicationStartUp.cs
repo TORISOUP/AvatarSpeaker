@@ -1,14 +1,13 @@
 using AvatarSpeaker.Http.Server;
 using AvatarSpeaker.UseCases;
-using UnityEngine;
 using VContainer.Unity;
 
 namespace AvatarSpeaker.StartUp
 {
     public sealed class ApplicationStartUp : IStartable
     {
-        private readonly RoomSpaceUseCase _roomSpaceUseCase;
         private readonly HttpServerRunner _httpServerRunner;
+        private readonly RoomSpaceUseCase _roomSpaceUseCase;
 
         public ApplicationStartUp(RoomSpaceUseCase roomSpaceUseCase, HttpServerRunner httpServerRunner)
         {

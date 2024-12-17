@@ -1,5 +1,4 @@
 using System;
-using R3;
 
 namespace AvatarSpeaker.Core.Configurations
 {
@@ -28,7 +27,7 @@ namespace AvatarSpeaker.Core.Configurations
 
         public override int GetHashCode()
         {
-            return (Address != null ? Address.GetHashCode() : 0);
+            return Address != null ? Address.GetHashCode() : 0;
         }
     }
 }

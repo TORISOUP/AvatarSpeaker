@@ -16,6 +16,15 @@ namespace AvatarSpeaker.UIs.Presenters
         private SpeakerUseCase _speakerUseCase;
         private UiController _uiController;
 
+        private void Start()
+        {
+            _button = GetComponent<Button>();
+
+            _button.OnClickAsAsyncEnumerable(destroyCancellationToken)
+                .SubscribeAwait(async (_, ct) => await SelectVrmAsync(ct))
+                .AddTo(destroyCancellationToken);
+        }
+
         [Inject]
         private void Initialize(UiController uiController,
             RoomSpaceUseCase roomSpaceUseCase,
@@ -26,15 +35,6 @@ namespace AvatarSpeaker.UIs.Presenters
             _speakerUseCase = speakerUseCase;
         }
 
-        private void Start()
-        {
-            _button = GetComponent<Button>();
-
-            _button.OnClickAsAsyncEnumerable(destroyCancellationToken)
-                .SubscribeAwait(async (_, ct) => await SelectVrmAsync(ct))
-                .AddTo(destroyCancellationToken);
-        }
-
         private async UniTask SelectVrmAsync(CancellationToken ct)
         {
             // メニューを無効化してSpeakerをロードする
@@ -42,7 +42,7 @@ namespace AvatarSpeaker.UIs.Presenters
             {
                 // 現在有効なSpeakerSourceを取得する
                 var speakerSources = await _speakerUseCase.GetAvailableSpeakerSourcesAsync(ct);
-                if(speakerSources.Length == 0)
+                if (speakerSources.Length == 0)
                 {
                     // 空なら何もしない
                     return;

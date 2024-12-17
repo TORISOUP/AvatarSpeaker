@@ -1,11 +1,11 @@
 using AvatarSpeaker.UseCases;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using R3;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
-using R3;
 
 namespace AvatarSpeaker.UIs.Presenters
 {
@@ -22,8 +22,8 @@ namespace AvatarSpeaker.UIs.Presenters
         [SerializeField] private Toggle _subtitlesToggle;
 
         private ConfigurationUseCase _configurationUseCase;
-        private VoiceControlUseCase _voiceControlUseCase;
         private SpeakerUseCase _speakerUseCase;
+        private VoiceControlUseCase _voiceControlUseCase;
 
         [Inject]
         public void Inject(ConfigurationUseCase configurationUseCase,

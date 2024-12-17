@@ -8,18 +8,19 @@ using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using VContainer.Unity;
+using Object = UnityEngine.Object;
 
 namespace AvatarSpeaker.Views.ViewBinder
 {
     public sealed class RoomSpaceViewBinder : IInitializable, IDisposable
     {
-        private readonly SpeakerCameraView _speakerCameraViewPrefab;
-        private readonly IRoomSpaceProvider _roomSpaceProvider;
-        private readonly CancellationTokenSource _cts = new();
-        private readonly UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundViewPrefab;
-        private readonly RuntimeAnimatorController _speakerAnimatorController;
-        private readonly SubtitleView _subtitleViewPrefab;
         private readonly IConfigurationRepository _configurationRepository;
+        private readonly CancellationTokenSource _cts = new();
+        private readonly IRoomSpaceProvider _roomSpaceProvider;
+        private readonly RuntimeAnimatorController _speakerAnimatorController;
+        private readonly SpeakerCameraView _speakerCameraViewPrefab;
+        private readonly SubtitleView _subtitleViewPrefab;
+        private readonly UguiRoomSpaceBackgroundView _uguiRoomSpaceBackgroundViewPrefab;
 
         private RoomSpaceView _currentRoomSpaceView;
         private SubtitleView _subtitleView;
@@ -39,10 +40,16 @@ namespace AvatarSpeaker.Views.ViewBinder
             _configurationRepository = configurationRepository;
         }
 
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+        }
+
         public void Initialize()
         {
             // SubtitleViewは常に1つ存在していてよいのでここで作る
-            _subtitleView = UnityEngine.Object.Instantiate(_subtitleViewPrefab);
+            _subtitleView = Object.Instantiate(_subtitleViewPrefab);
 
             // RoomSpaceが生成されたらRoomSpaceViewとSpeakerCameraViewを生成
             _roomSpaceProvider.CurrentRoomSpace
@@ -79,11 +86,11 @@ namespace AvatarSpeaker.Views.ViewBinder
             var roomSpaceView = RoomSpaceView.Create();
 
             // SpeakerCameraViewを生成
-            var speakerCameraView = UnityEngine.Object.Instantiate(_speakerCameraViewPrefab);
+            var speakerCameraView = Object.Instantiate(_speakerCameraViewPrefab);
             speakerCameraView.Initialize(roomSpace.SpeakerCamera);
 
             // UguiRoomSpaceBackgroundViewを生成
-            var backgroundView = UnityEngine.Object.Instantiate(_uguiRoomSpaceBackgroundViewPrefab);
+            var backgroundView = Object.Instantiate(_uguiRoomSpaceBackgroundViewPrefab);
             backgroundView.Initalize(roomSpace, speakerCameraView.Camera);
 
             // RoomSpaceViewに登録
@@ -99,13 +106,7 @@ namespace AvatarSpeaker.Views.ViewBinder
             _currentRoomSpaceView = null;
 
             // RoomSpaceViewを破棄
-            UnityEngine.Object.Destroy(roomSpaceView.Root);
-        }
-
-        public void Dispose()
-        {
-            _cts.Cancel();
-            _cts.Dispose();
+            Object.Destroy(roomSpaceView.Root);
         }
     }
 }

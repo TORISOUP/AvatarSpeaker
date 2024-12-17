@@ -8,18 +8,27 @@ namespace AvatarSpeaker.Http.Server
 {
     public sealed class HttpServerRunner : IDisposable
     {
-        private readonly HttpServer _currentHttpServer;
-        private readonly CancellationTokenSource _cts = new();
-
-        private readonly IEnumerable<BaseController> _controllers;
         private readonly IConfigurationRepository _configurationRepository;
 
+        private readonly IEnumerable<BaseController> _controllers;
+        private readonly CancellationTokenSource _cts = new();
+        private readonly HttpServer _currentHttpServer;
 
-        public HttpServerRunner(IEnumerable<BaseController> controllers, IConfigurationRepository configurationRepository)
+
+        public HttpServerRunner(IEnumerable<BaseController> controllers,
+            IConfigurationRepository configurationRepository)
         {
             _currentHttpServer = new HttpServer();
             _controllers = controllers;
             _configurationRepository = configurationRepository;
+        }
+
+
+        public void Dispose()
+        {
+            _cts.Cancel();
+            _cts.Dispose();
+            _currentHttpServer?.Dispose();
         }
 
         public void Start()
@@ -34,23 +43,11 @@ namespace AvatarSpeaker.Http.Server
                 .Subscribe(x =>
                 {
                     if (x.IsEnabled)
-                    {
                         _currentHttpServer.Start(x.Port);
-                    }
                     else
-                    {
                         _currentHttpServer.Stop();
-                    }
                 })
                 .RegisterTo(_cts.Token);
-        }
-
-
-        public void Dispose()
-        {
-            _cts.Cancel();
-            _cts.Dispose();
-            _currentHttpServer?.Dispose();
         }
     }
 }

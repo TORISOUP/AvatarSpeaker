@@ -10,9 +10,8 @@ namespace AvatarSpeaker.UIs.Presenters
 {
     public class MainCanvasPresenter : MonoBehaviour
     {
-        private UiController _uiController;
-
         [SerializeField] private Button _closeButton;
+        private UiController _uiController;
 
         [Inject]
         public void Inject(UiController uiController)
@@ -32,13 +31,9 @@ namespace AvatarSpeaker.UIs.Presenters
                 .Subscribe(_ =>
                 {
                     if (_uiController.IsUiUsing.Value)
-                    {
                         _uiController.CloseMainUI();
-                    }
                     else
-                    {
                         _uiController.OpenMainUI();
-                    }
                 }, destroyCancellationToken);
 
             // 最初は開いておく

@@ -28,9 +28,15 @@ namespace AvatarSpeaker.UIs.Presenters
         [SerializeField] private TMP_InputField _volumeInputField;
 
         [SerializeField] private Button _speakButton;
+        private readonly Dictionary<TMP_Dropdown.OptionData, SpeakStyle> _styleMap = new();
 
         private SpeakerUseCase _speakerUseCase;
-        private readonly Dictionary<TMP_Dropdown.OptionData, SpeakStyle> _styleMap = new();
+
+        private void Awake()
+        {
+            _speakArea.SetActive(false);
+            _loading.SetActive(false);
+        }
 
         [Inject]
         public void Inject(SpeakerUseCase speakerUseCase)
@@ -62,12 +68,6 @@ namespace AvatarSpeaker.UIs.Presenters
                         _speakButton.interactable = true;
                     }
                 });
-        }
-
-        private void Awake()
-        {
-            _speakArea.SetActive(false);
-            _loading.SetActive(false);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace AvatarSpeaker.UIs.Presenters
             _styleDropdown.onValueChanged.AddListener(i =>
             {
                 var style = _styleMap[_styleDropdown.options[i]];
-                speaker.ChangeSpeakParameter(speaker.CurrentSpeakParameter.CurrentValue.Clone(style: style));
+                speaker.ChangeSpeakParameter(speaker.CurrentSpeakParameter.CurrentValue.Clone(style));
             });
 
 

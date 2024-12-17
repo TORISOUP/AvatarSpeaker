@@ -16,7 +16,7 @@ namespace AvatarSpeaker.Core.Configurations
         /// Httpサーバーの設定
         /// </summary>
         ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
-        
+
         /// <summary>
         /// 字幕の有効/無効
         /// </summary>

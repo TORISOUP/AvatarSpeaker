@@ -14,16 +14,10 @@ namespace AvatarSpeaker.UseCases
     /// </summary>
     public sealed class SpeakerUseCase : IDisposable
     {
-        private readonly ISpeakerSourceProvider _speakerSourceProvider;
         private readonly IRoomSpaceProvider _roomSpaceProvider;
-        private readonly ISpeakStyleProvider _speakStyleProvider;
         private readonly IDisposable _speakerChangedDisposable;
-
-
-        /// <summary>
-        /// RoomSpaceのSpeakerが変更されたときに発行されるObservable
-        /// </summary>
-        public Observable<Speaker?> OnSpeakerChanged { get; }
+        private readonly ISpeakerSourceProvider _speakerSourceProvider;
+        private readonly ISpeakStyleProvider _speakStyleProvider;
 
         public SpeakerUseCase(ISpeakerSourceProvider speakerSourceProvider,
             IRoomSpaceProvider roomSpaceProvider,
@@ -41,6 +35,17 @@ namespace AvatarSpeaker.UseCases
                     .Publish();
             _speakerChangedDisposable = connectable.Connect();
             OnSpeakerChanged = connectable;
+        }
+
+
+        /// <summary>
+        /// RoomSpaceのSpeakerが変更されたときに発行されるObservable
+        /// </summary>
+        public Observable<Speaker?> OnSpeakerChanged { get; }
+
+        public void Dispose()
+        {
+            _speakerChangedDisposable.Dispose();
         }
 
         /// <summary>
@@ -70,10 +75,7 @@ namespace AvatarSpeaker.UseCases
                 .FirstAsync(x => x != null, ct)!;
 
             var speaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (speaker == null)
-            {
-                return;
-            }
+            if (speaker == null) return;
 
             await speaker.SpeakAsync(text, ct);
         }
@@ -90,10 +92,7 @@ namespace AvatarSpeaker.UseCases
                 .FirstAsync(x => x != null, ct)!;
 
             var speaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (speaker == null)
-            {
-                return;
-            }
+            if (speaker == null) return;
 
             await speaker.SpeakAsync(text, speakParameter, ct);
         }
@@ -102,16 +101,10 @@ namespace AvatarSpeaker.UseCases
         public void ChangeIdlePoseToCurrentSpeaker(IdlePose idlePose)
         {
             var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
-            if (roomSpace == null)
-            {
-                return;
-            }
+            if (roomSpace == null) return;
 
             var speaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (speaker == null)
-            {
-                return;
-            }
+            if (speaker == null) return;
 
             speaker.ChangeIdlePose(idlePose);
         }
@@ -119,17 +112,9 @@ namespace AvatarSpeaker.UseCases
         public Speaker? GetCurrentSpeaker()
         {
             var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
-            if (roomSpace == null)
-            {
-                return null;
-            }
+            if (roomSpace == null) return null;
 
             return roomSpace.CurrentSpeaker.CurrentValue;
-        }
-
-        public void Dispose()
-        {
-            _speakerChangedDisposable.Dispose();
         }
     }
 }

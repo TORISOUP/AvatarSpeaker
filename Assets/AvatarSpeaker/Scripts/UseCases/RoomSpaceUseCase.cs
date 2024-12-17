@@ -15,8 +15,8 @@ namespace AvatarSpeaker.UseCases
     {
         private readonly IRoomSpaceProvider _roomSpaceProvider;
         private readonly IRoomSpaceRegister _roomSpaceRegister;
-        private readonly ISpeakerProvider _speakerProvider;
         private readonly SpeakerCameraUseCase _speakerCameraUseCase;
+        private readonly ISpeakerProvider _speakerProvider;
 
         public RoomSpaceUseCase(IRoomSpaceProvider roomSpaceProvider,
             IRoomSpaceRegister roomSpaceRegister,
@@ -28,9 +28,9 @@ namespace AvatarSpeaker.UseCases
             _speakerProvider = speakerProvider;
             _speakerCameraUseCase = speakerCameraUseCase;
         }
-        
+
         public RoomSpace? CurrentRoomSpace => _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
-        
+
 
         /// <summary>
         /// 新しいRoomSpaceを作成し、古いRoomSpaceを破棄する
@@ -56,10 +56,7 @@ namespace AvatarSpeaker.UseCases
 
             // 現在のSpeakerがRoomSpaceに配置されている場合は削除する
             var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (currentSpeaker != null)
-            {
-                roomSpace.RemoveSpeaker(currentSpeaker.Id);
-            }
+            if (currentSpeaker != null) roomSpace.RemoveSpeaker(currentSpeaker.Id);
 
             // Speakerをロードする
             var speaker = await _speakerProvider.LoadSpeakerAsync(speakerSource, ct);
@@ -70,12 +67,12 @@ namespace AvatarSpeaker.UseCases
             // カメラを現在のSpeakerの顔にフォーカスする
             _speakerCameraUseCase.FocusOnCurrentSpeakerFace();
         }
-        
+
         public void ChangeBackgroundColor(Color color)
         {
             var roomSpace = CurrentRoomSpace;
             if (roomSpace == null) return;
-            
+
             roomSpace.ChangeBackgroundColor(color);
         }
     }

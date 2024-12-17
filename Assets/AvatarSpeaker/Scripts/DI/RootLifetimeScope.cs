@@ -1,5 +1,4 @@
 using System;
-using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Configurations;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Http;
@@ -56,16 +55,16 @@ namespace AvatarSpeaker.DI
 
             //
             builder.Register<VoicevoxSpeakerProvider>(Lifetime.Singleton).As<ISpeakerProvider, IDisposable>();
-            
+
             // Infrastructures
             builder.Register<VoicevoxSpeakStyleProvider>(Lifetime.Singleton).As<ISpeakStyleProvider>();
             builder.Register<VoicevoxVoiceController>(Lifetime.Singleton).As<IVoiceController>();
-            
+
             // Http
             builder.Register<HttpServerRunner>(Lifetime.Singleton);
             builder.Register<SpeakerBaseController>(Lifetime.Singleton).As<BaseController>();
             builder.Register<MiscController>(Lifetime.Singleton).As<BaseController>();
-            
+
             builder.Register<CurrentConfigurationRepository>(Lifetime.Singleton)
                 .WithParameter(new VoiceControlConnectionSettings("http://localhost:50021"))
                 .WithParameter(new HttpServerSettings(21012, true))

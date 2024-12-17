@@ -29,10 +29,7 @@ namespace AvatarSpeaker.UseCases
             if (roomSpace == null) return;
 
             var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
-            if (currentSpeaker == null)
-            {
-                return;
-            }
+            if (currentSpeaker == null) return;
 
             // RoomSpaceが存在するならCameraは必ず存在する
             var camera = CurrentSpeakerCamera!;
@@ -53,7 +50,7 @@ namespace AvatarSpeaker.UseCases
             var camera = CurrentSpeakerCamera;
             if (camera == null) return;
 
-            camera.Position.Value +=  camera.Rotation.Value * move;
+            camera.Position.Value += camera.Rotation.Value * move;
         }
 
         /// <summary>
@@ -66,8 +63,8 @@ namespace AvatarSpeaker.UseCases
 
             var currentRotation = camera.Rotation.CurrentValue;
             var forward = currentRotation * Vector3.forward;
-            var up = Vector3.up; 
-            var horizontalRotation = Quaternion.AngleAxis(euler.x, up);           // 水平方向 (Y軸) の回転
+            var up = Vector3.up;
+            var horizontalRotation = Quaternion.AngleAxis(euler.x, up); // 水平方向 (Y軸) の回転
             var verticalRotation = Quaternion.AngleAxis(euler.y, Vector3.right); // 垂直方向 (X軸) の回転
 
             var rotatedForward = horizontalRotation * forward;

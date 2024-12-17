@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace AvatarSpeaker.UIs
 {
@@ -49,7 +48,7 @@ namespace AvatarSpeaker.UIs
             _cameraSubCanvas.enabled = true;
             _settingsSubCanvas.enabled = false;
         }
-        
+
         public void OpenSettingsSubCanvas()
         {
             _speakerSubCanvas.enabled = false;
@@ -103,10 +102,7 @@ namespace AvatarSpeaker.UIs
 
             public void Dispose()
             {
-                if (_canvas != null)
-                {
-                    _canvas.enabled = true;
-                }
+                if (_canvas != null) _canvas.enabled = true;
             }
         }
     }

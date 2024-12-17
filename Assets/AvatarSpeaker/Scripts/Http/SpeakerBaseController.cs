@@ -1,6 +1,5 @@
 using System;
 using System.Net;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using AvatarSpeaker.Http.Models;
@@ -108,12 +107,12 @@ namespace AvatarSpeaker.Http
                 }
 
                 var parameters = speaker.CurrentSpeakParameter.CurrentValue;
-                var dto = new SpeakParametersDto()
+                var dto = new SpeakParametersDto
                 {
                     Style = parameters.Style.Id,
                     SpeedScale = parameters.SpeedScale,
                     PitchScale = parameters.PitchScale,
-                    VolumeScale = parameters.VolumeScale,
+                    VolumeScale = parameters.VolumeScale
                 };
 
                 await SuccessAsJson(response, dto);
@@ -125,7 +124,7 @@ namespace AvatarSpeaker.Http
                 response.Close();
             }
         }
-        
+
         /// <summary>
         /// 現在の設定値を上書きする
         /// </summary>
@@ -154,7 +153,7 @@ namespace AvatarSpeaker.Http
                     response.Close();
                     return;
                 }
-                
+
                 speaker.ChangeSpeakParameter(parameters);
 
                 response.StatusCode = (int)HttpStatusCode.OK;

@@ -34,13 +34,13 @@ namespace AvatarSpeaker.Http.Models
     [DataContract(Name = "SpeakStyle")]
     public class SpeakStyleDto
     {
-        [JsonPropertyName("id")] public int Id { get; set; }
-        [JsonPropertyName("displayName")] public string DisplayName { get; set; }
-
         public SpeakStyleDto(int id, string displayName)
         {
             Id = id;
             DisplayName = displayName;
         }
+
+        [JsonPropertyName("id")] public int Id { get; set; }
+        [JsonPropertyName("displayName")] public string DisplayName { get; set; }
     }
 }

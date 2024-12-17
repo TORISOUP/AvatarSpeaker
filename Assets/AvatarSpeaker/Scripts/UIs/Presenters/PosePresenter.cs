@@ -16,9 +16,8 @@ namespace AvatarSpeaker.UIs.Presenters
     /// </summary>
     public sealed class PosePresenter : MonoBehaviour
     {
-        private SpeakerUseCase _speakerUseCase;
-
         [SerializeField] private Dropdown _dropdown;
+        private SpeakerUseCase _speakerUseCase;
 
         [Inject]
         public void Inject(SpeakerUseCase speakerUseCase)
@@ -44,16 +43,13 @@ namespace AvatarSpeaker.UIs.Presenters
                     var pose = (IdlePose)v; // enumの定義 = indexという前提を使う
                     _speakerUseCase.ChangeIdlePoseToCurrentSpeaker(pose);
                 });
-            
+
             // UseCase -> View
             _speakerUseCase.OnSpeakerChanged
                 .Subscribe(_ =>
                 {
                     var speaker = _speakerUseCase.GetCurrentSpeaker();
-                    if(speaker != null)
-                    {
-                        _dropdown.value = (int)speaker.CurrentIdlePose.CurrentValue;
-                    }
+                    if (speaker != null) _dropdown.value = (int)speaker.CurrentIdlePose.CurrentValue;
                 })
                 .AddTo(this);
         }

@@ -17,10 +17,7 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
         public async UniTask<bool> IsReadyAsync(CancellationToken ct)
         {
             var apiClient = _voicevoxProvider.ApiClient.CurrentValue;
-            if (apiClient == null)
-            {
-                return false;
-            }
+            if (apiClient == null) return false;
 
             try
             {

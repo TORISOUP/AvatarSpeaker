@@ -1,6 +1,5 @@
 using System;
 using AvatarSpeaker.Core.Configurations;
-using AvatarSpeaker.Infrastructures.Configurations;
 using R3;
 using VoicevoxClientSharp;
 using VoicevoxClientSharp.ApiClient;
@@ -12,13 +11,10 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
     /// </summary>
     public sealed class VoicevoxProvider : IDisposable
     {
-        public ReadOnlyReactiveProperty<VoicevoxSynthesizer> Synthesizer => _synthesizer;
-        private readonly ReactiveProperty<VoicevoxSynthesizer> _synthesizer;
-
-        public ReadOnlyReactiveProperty<IVoicevoxApiClient> ApiClient => _apiClient;
         private readonly ReactiveProperty<IVoicevoxApiClient> _apiClient;
 
         private readonly IDisposable _disposable;
+        private readonly ReactiveProperty<VoicevoxSynthesizer> _synthesizer;
 
         public VoicevoxProvider(IConfigurationRepository configurationRepository)
         {
@@ -31,6 +27,18 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
             _disposable = configurationRepository.VoiceControlConnectionSettings.Subscribe(ChangeConnectionSettings);
         }
 
+        public ReadOnlyReactiveProperty<VoicevoxSynthesizer> Synthesizer => _synthesizer;
+
+        public ReadOnlyReactiveProperty<IVoicevoxApiClient> ApiClient => _apiClient;
+
+
+        public void Dispose()
+        {
+            _synthesizer.Value?.Dispose();
+            _synthesizer.Dispose(true);
+            _disposable.Dispose();
+        }
+
         private void ChangeConnectionSettings(VoiceControlConnectionSettings settings)
         {
             if (string.IsNullOrEmpty(settings.Address)) return;
@@ -40,14 +48,6 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
 
             _apiClient.Value = VoicevoxApiClient.Create(settings.Address);
             _synthesizer.Value = new VoicevoxSynthesizer(_apiClient.Value);
-        }
-
-
-        public void Dispose()
-        {
-            _synthesizer.Value?.Dispose();
-            _synthesizer.Dispose(true);
-            _disposable.Dispose();
         }
     }
 }

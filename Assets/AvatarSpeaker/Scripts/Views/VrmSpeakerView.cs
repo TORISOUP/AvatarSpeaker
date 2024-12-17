@@ -10,8 +10,8 @@ namespace AvatarSpeaker.Views
 {
     public sealed class VrmSpeakerView : MonoBehaviour
     {
-        private VrmSpeaker _vrmSpeaker;
         private RuntimeAnimatorController _runtimeAnimatorController;
+        private VrmSpeaker _vrmSpeaker;
 
         public void SetVrmSpeaker(VrmSpeaker vrmSpeaker, RuntimeAnimatorController runtimeAnimatorController)
         {

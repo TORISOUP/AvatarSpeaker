@@ -23,7 +23,7 @@ namespace AvatarSpeaker.Core.Models
 
         public override int GetHashCode()
         {
-            return (Text != null ? Text.GetHashCode() : 0);
+            return Text != null ? Text.GetHashCode() : 0;
         }
     }
 }

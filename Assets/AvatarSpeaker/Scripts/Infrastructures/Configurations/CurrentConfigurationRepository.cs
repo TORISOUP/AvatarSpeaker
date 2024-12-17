@@ -6,11 +6,6 @@ namespace AvatarSpeaker.Infrastructures.Configurations
 {
     public sealed class CurrentConfigurationRepository : IConfigurationRepository, IDisposable
     {
-        public ReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings { get; }
-        public ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
-
-        public ReactiveProperty<bool> IsSubtitleEnabled { get; }　= new(true);
-
         public CurrentConfigurationRepository(VoiceControlConnectionSettings voiceControlConnectionSettings,
             HttpServerSettings httpServerSettings)
         {
@@ -18,6 +13,11 @@ namespace AvatarSpeaker.Infrastructures.Configurations
                 new ReactiveProperty<VoiceControlConnectionSettings>(voiceControlConnectionSettings);
             HttpServerSettings = new ReactiveProperty<HttpServerSettings>(httpServerSettings);
         }
+
+        public ReactiveProperty<VoiceControlConnectionSettings> VoiceControlConnectionSettings { get; }
+        public ReactiveProperty<HttpServerSettings> HttpServerSettings { get; }
+
+        public ReactiveProperty<bool> IsSubtitleEnabled { get; }　= new(true);
 
 
         public void Dispose()

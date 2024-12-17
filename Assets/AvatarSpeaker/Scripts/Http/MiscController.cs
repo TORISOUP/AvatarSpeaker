@@ -30,8 +30,8 @@ namespace AvatarSpeaker.Http
             try
             {
                 var styles = await _speakerUseCase.GetSpeakStylesAsync(ct);
-                var dto = styles.Select(x=> new SpeakStyleDto(x.Id, x.DisplayName)).ToArray();
-                
+                var dto = styles.Select(x => new SpeakStyleDto(x.Id, x.DisplayName)).ToArray();
+
                 await SuccessAsJson(response, dto);
                 response.Close();
             }

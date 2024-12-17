@@ -4,12 +4,12 @@ namespace AvatarSpeaker.Http
 {
     public abstract class RouterAttribute : PreserveAttribute
     {
-        public string LocalPath { get; }
-
         protected RouterAttribute(string localPath)
         {
-            this.LocalPath = localPath;
+            LocalPath = localPath;
         }
+
+        public string LocalPath { get; }
     }
 
     public class Get : RouterAttribute

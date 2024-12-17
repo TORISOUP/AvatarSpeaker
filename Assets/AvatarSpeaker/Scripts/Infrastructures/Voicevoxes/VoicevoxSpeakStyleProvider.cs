@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading;
-using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Interfaces;
 using AvatarSpeaker.Core.Models;
 using Cysharp.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
         public async UniTask<SpeakStyle[]> GetSpeakStylesAsync(CancellationToken ct)
         {
             var synthesizer =
-                await _voicevoxProvider.Synthesizer.FirstAsync(x => x != null, cancellationToken: ct);
+                await _voicevoxProvider.Synthesizer.FirstAsync(x => x != null, ct);
 
             // ここの「Speaker」は「VoicevoxClientSharp.Speaker」
             var voicevoxSpeakers = await synthesizer.GetSpeakersAsync(ct);
