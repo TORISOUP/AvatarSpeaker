@@ -63,7 +63,7 @@ namespace AvatarSpeaker.DI
 
             // Http
             builder.Register<HttpServerRunner>(Lifetime.Singleton);
-            builder.Register<SpeakerBaseController>(Lifetime.Singleton).As<BaseController>();
+            builder.Register<SpeakerController>(Lifetime.Singleton).As<BaseController>();
             builder.Register<MiscController>(Lifetime.Singleton).As<BaseController>();
         }
     }

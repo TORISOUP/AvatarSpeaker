@@ -12,11 +12,11 @@ namespace AvatarSpeaker.Http
     /// <summary>
     /// /api/v1/speakers/
     /// </summary>
-    public sealed class SpeakerBaseController : BaseController
+    public sealed class SpeakerController : BaseController
     {
         private readonly SpeakerUseCase _speakerUseCase;
 
-        public SpeakerBaseController(SpeakerUseCase speakerUseCase)
+        public SpeakerController(SpeakerUseCase speakerUseCase)
         {
             _speakerUseCase = speakerUseCase;
         }
