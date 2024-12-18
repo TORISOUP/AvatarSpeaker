@@ -21,7 +21,7 @@ namespace AvatarSpeaker.Http.Server
         private readonly Dictionary<(string, string), Handler> _routes = new();
         private CancellationTokenSource _cts = new();
         private bool _isDisposed;
-        
+
         public void Dispose()
         {
             if (_isDisposed) return;
@@ -35,6 +35,7 @@ namespace AvatarSpeaker.Http.Server
         private void AddPost(string localPath, Handler handler) => Method("POST", localPath, handler);
         private void AddPut(string localPath, Handler handler) => Method("PUT", localPath, handler);
         private void AddDelete(string localPath, Handler handler) => Method("DELETE", localPath, handler);
+
         private void Method(string httpMethod, string localPath, Handler handler)
         {
             _routes.Add((httpMethod, localPath), handler);
@@ -87,13 +88,15 @@ namespace AvatarSpeaker.Http.Server
                         else
                         {
                             response.StatusCode = (int)HttpStatusCode.NotFound;
-                            response.Close();
                         }
                     }
                     catch (Exception e)
                     {
                         Debug.LogException(e);
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    }
+                    finally
+                    {
                         response.Close();
                     }
                 }

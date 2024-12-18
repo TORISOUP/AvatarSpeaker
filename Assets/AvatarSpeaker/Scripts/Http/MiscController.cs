@@ -36,13 +36,11 @@ namespace AvatarSpeaker.Http
                 var dto = styles.Select(x => new SpeakStyleDto(x.Id, x.DisplayName)).ToArray();
 
                 await SuccessAsJson(response, dto);
-                response.Close();
             }
             catch (Exception)
             {
                 // Voicevoxからの取得に失敗した場合は500を返す
                 response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                response.Close();
             }
         }
     }

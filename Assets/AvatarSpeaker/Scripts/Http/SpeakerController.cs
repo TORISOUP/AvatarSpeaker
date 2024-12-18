@@ -21,7 +21,6 @@ namespace AvatarSpeaker.Http
             _speakerUseCase = speakerUseCase;
         }
 
-
         /// <summary>
         /// 現在のSpeakerの設定で発話する
         /// </summary>
@@ -38,7 +37,6 @@ namespace AvatarSpeaker.Http
                 if (data.Text == null)
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.Close();
                     return;
                 }
 
@@ -46,12 +44,10 @@ namespace AvatarSpeaker.Http
                 _speakerUseCase.SpeakByCurrentSpeakerAsync(data.Text, default).Forget();
 
                 response.StatusCode = (int)HttpStatusCode.OK;
-                response.Close();
             }
             catch (Exception)
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
-                response.Close();
             }
         }
 
@@ -72,7 +68,6 @@ namespace AvatarSpeaker.Http
                 if (data.Text == null)
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.Close();
                     return;
                 }
 
@@ -81,12 +76,10 @@ namespace AvatarSpeaker.Http
                     .Forget();
 
                 response.StatusCode = (int)HttpStatusCode.OK;
-                response.Close();
             }
             catch (Exception)
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
-                response.Close();
             }
         }
 
@@ -105,7 +98,6 @@ namespace AvatarSpeaker.Http
                 if (speaker == null)
                 {
                     response.StatusCode = (int)HttpStatusCode.NotFound;
-                    response.Close();
                     return;
                 }
 
@@ -119,12 +111,10 @@ namespace AvatarSpeaker.Http
                 };
 
                 await SuccessAsJson(response, dto);
-                response.Close();
             }
             catch (Exception)
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
-                response.Close();
             }
         }
 
@@ -143,7 +133,6 @@ namespace AvatarSpeaker.Http
                 if (speaker == null)
                 {
                     response.StatusCode = (int)HttpStatusCode.NotFound;
-                    response.Close();
                     return;
                 }
 
@@ -153,19 +142,16 @@ namespace AvatarSpeaker.Http
                 if (!parameters.Validate())
                 {
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.Close();
                     return;
                 }
 
                 speaker.ChangeSpeakParameter(parameters);
 
                 response.StatusCode = (int)HttpStatusCode.OK;
-                response.Close();
             }
             catch (Exception)
             {
                 response.StatusCode = (int)HttpStatusCode.BadRequest;
-                response.Close();
             }
         }
     }
