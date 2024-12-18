@@ -97,22 +97,14 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         public override ReadOnlyReactiveProperty<string> CurrentSpeakingText => _currentSpeakingText;
 
         /// <summary>
-        /// 両目の中心の位置を顔の位置として利用する
+        /// 目の位置をSpeakerの顔の位置として利用する
         /// </summary>
-        public override Vector3 FacePosition
-        {
-            get
-            {
-                var leftEye = _animator.GetBoneTransform(HumanBodyBones.LeftEye).position;
-                var rightEye = _animator.GetBoneTransform(HumanBodyBones.RightEye).position;
-                return (leftEye + rightEye) / 2;
-            }
-        }
+        public override Vector3 FacePosition => Vrm10Instance.Runtime.LookAt.LookAtOriginTransform.position;
 
         /// <summary>
         /// 腰の位置をSpeakerの前方向として利用する
         /// </summary>
-        public override Vector3 BodyForward => _animator.GetBoneTransform(HumanBodyBones.Chest).forward;
+        public override Vector3 BodyForward => Vrm10Instance.Runtime.LookAt.LookAtOriginTransform.forward;
 
         public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
 
