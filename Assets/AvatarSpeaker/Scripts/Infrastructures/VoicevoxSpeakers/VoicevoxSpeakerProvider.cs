@@ -28,19 +28,27 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         public UniTask<Speaker> LoadSpeakerAsync(ISpeakerSource source, CancellationToken ct)
         {
+            // VisitorパターンでISpeakerSourceを処理する
             return source.Accept(this, ct);
         }
 
+        /// <summary>
+        /// LocalSpeakerSourceに対する実装
+        /// </summary>
         public async UniTask<Speaker> Visit(LocalSpeakerSource source, CancellationToken ct)
         {
+            // ローカルパスからVRMをロードしてInstantiate
             var vrmInstance = await Vrm10.LoadPathAsync(source.Path, ct: ct);
+            
+            // LoadPathAsyncでのctの扱い方が不明なので
+            // ここでキャンセルされていたら破棄して例外を投げる
             if (ct.IsCancellationRequested)
             {
                 Object.Destroy(vrmInstance.gameObject);
                 ct.ThrowIfCancellationRequested();
             }
-
-            // Speakerを生成
+            
+            // VoicevoxSpeakerを生成
             var speaker = new VoicevoxSpeaker(vrmInstance, _voicevoxProvider);
             return speaker;
         }

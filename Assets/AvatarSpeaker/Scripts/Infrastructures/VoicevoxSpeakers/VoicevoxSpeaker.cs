@@ -19,7 +19,6 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
     /// </summary>
     public class VoicevoxSpeaker : VrmSpeaker
     {
-        private readonly Animator _animator;
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ReactiveProperty<string> _currentSpeakingText = new("");
 
@@ -30,7 +29,6 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                 new();
 
         private readonly VoicevoxProvider _voicevoxProvider;
-
         private readonly GameObject _vrmGameObject;
 
         public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxProvider provider)
@@ -43,16 +41,22 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
             _voicevoxProvider = provider;
             _vrmGameObject = vrm10Instance.gameObject;
-            _animator = _vrmGameObject.GetComponent<Animator>();
 
+            // AudioSourceを追加
             var audioSource = _vrmGameObject.AddComponent<AudioSource>();
+            // VRMをリップシンクするためのコンポーネントを追加
             var lipSync = _vrmGameObject.AddComponent<VoicevoxVrmLipSyncPlayer>();
 
+            // 音声合成の再生を行うコンポーネントを追加
             var voicevoxSpeakPlayer = _vrmGameObject.AddComponent<VoicevoxSpeakPlayer>();
+
+            // 紐づける
             voicevoxSpeakPlayer.AudioSource = audioSource;
             voicevoxSpeakPlayer.AddOptionalVoicevoxPlayer(lipSync);
 
-            // 音声合成のタスクが流れてくる
+            // 音声合成の再生依頼が流れてくるので、ここで非同期的に逐次処理する
+            // VOICEVOXに事前に音声合成リクエストだけ投げておき、終わったら音声再生を実行する
+            // 音声再生が終わったら次の音声合成リクエストが完了するのを待つ、を繰り返す
             _speechRegisterSubject
                 .SubscribeAwait(async (values, ct) =>
                 {
@@ -109,15 +113,21 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         public override UniTask OnDisposeAsync => _onDisposeUniTaskCompletionSource.Task;
 
 
+        /// <summary>
+        /// 発話する
+        /// </summary>
         public override async UniTask SpeakAsync(string text, CancellationToken ct)
         {
             var speakParameter = CurrentSpeakParameter.CurrentValue;
             await SpeakAsync(text, speakParameter, ct);
         }
 
+        /// <summary>
+        /// 発話する
+        /// </summary>
         public override async UniTask SpeakAsync(string text, SpeakParameter speakParameter, CancellationToken ct)
         {
-            var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
+            using var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
             var synthesiser = _voicevoxProvider.Synthesizer.CurrentValue;
