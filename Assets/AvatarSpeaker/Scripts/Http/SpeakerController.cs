@@ -71,8 +71,10 @@ namespace AvatarSpeaker.Http
                     return;
                 }
 
+                // SpeakerUseCaseを用いて発話命令を送る
                 // HTTPレスポンスはすぐに返したいのでForget
-                _speakerUseCase.SpeakByCurrentSpeakerAsync(data.Text, data.Parameters.As(), default)
+                _speakerUseCase
+                    .SpeakByCurrentSpeakerAsync(data.Text, data.Parameters.ToCore(), default)
                     .Forget();
 
                 response.StatusCode = (int)HttpStatusCode.OK;
@@ -137,7 +139,7 @@ namespace AvatarSpeaker.Http
                 }
 
                 var dto = await ReadAsJson<SpeakParametersDto>(request, response);
-                var parameters = dto.As();
+                var parameters = dto.ToCore();
 
                 if (!parameters.Validate())
                 {

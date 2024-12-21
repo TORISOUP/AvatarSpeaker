@@ -54,6 +54,8 @@ namespace AvatarSpeaker.UseCases
             var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
                 .FirstAsync(x => x != null, ct);
 
+            if (roomSpace == null) return;
+
             // 現在のSpeakerがRoomSpaceに配置されている場合は削除する
             var currentSpeaker = roomSpace.CurrentSpeaker.CurrentValue;
             if (currentSpeaker != null) roomSpace.RemoveSpeaker(currentSpeaker.Id);

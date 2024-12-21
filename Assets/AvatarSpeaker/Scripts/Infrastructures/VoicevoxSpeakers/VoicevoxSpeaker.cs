@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AvatarSpeaker.Core.Models;
-using AvatarSpeaker.Cushion.VRM;
+using AvatarSpeaker.Core.UnityAdapter.VRM;
 using AvatarSpeaker.Infrastructures.Voicevoxes;
 using Cysharp.Threading.Tasks;
 using R3;

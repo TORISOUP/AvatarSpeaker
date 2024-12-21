@@ -1,7 +1,6 @@
-using AvatarSpeaker.Core;
 using UnityEngine;
 
-namespace AvatarSpeaker.Cushion
+namespace AvatarSpeaker.Core.UnityAdapter
 {
     /// <summary>
     /// UnityのGameObjectに依存したSpeaker

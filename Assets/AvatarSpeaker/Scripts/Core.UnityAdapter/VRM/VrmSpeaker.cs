@@ -1,6 +1,6 @@
 using UniVRM10;
 
-namespace AvatarSpeaker.Cushion.VRM
+namespace AvatarSpeaker.Core.UnityAdapter.VRM
 {
     /// <summary>
     /// VRM10に依存したSpeaker

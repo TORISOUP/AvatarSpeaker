@@ -25,7 +25,7 @@ namespace AvatarSpeaker.Http.Models
         [JsonPropertyName("pitchScale")] public float PitchScale { get; set; }
         [JsonPropertyName("volumeScale")] public float VolumeScale { get; set; }
 
-        public SpeakParameter As()
+        public SpeakParameter ToCore()
         {
             return new SpeakParameter(new SpeakStyle(Style, ""), SpeedScale, PitchScale, VolumeScale);
         }

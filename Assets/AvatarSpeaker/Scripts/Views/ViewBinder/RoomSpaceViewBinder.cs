@@ -3,7 +3,7 @@ using System.Threading;
 using AvatarSpeaker.Core;
 using AvatarSpeaker.Core.Configurations;
 using AvatarSpeaker.Core.Interfaces;
-using AvatarSpeaker.Cushion.VRM;
+using AvatarSpeaker.Core.UnityAdapter.VRM;
 using AvatarSpeaker.Views.RoomSpaces;
 using Cysharp.Threading.Tasks;
 using R3;

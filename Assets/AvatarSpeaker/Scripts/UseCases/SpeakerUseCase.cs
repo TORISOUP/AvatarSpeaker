@@ -70,10 +70,11 @@ namespace AvatarSpeaker.UseCases
         /// </summary>
         public async UniTask SpeakByCurrentSpeakerAsync(string text, CancellationToken ct)
         {
-            // 現在のRoomSpaceのSpeakerを取得して発話させる
+            // 現在のRoomSpaceを取得する
             var roomSpace = await _roomSpaceProvider.CurrentRoomSpace
                 .FirstAsync(x => x != null, ct)!;
 
+            // Speakerを取得して発話させる
             var speaker = roomSpace.CurrentSpeaker.CurrentValue;
             if (speaker == null) return;
 
