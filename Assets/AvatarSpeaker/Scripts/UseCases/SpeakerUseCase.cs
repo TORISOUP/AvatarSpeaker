@@ -97,6 +97,18 @@ namespace AvatarSpeaker.UseCases
 
             await speaker.SpeakAsync(text, speakParameter, ct);
         }
+        
+        /// <summary>
+        /// 現在のRoomSpaceのSpeakerを発話をすべてキャンセルする
+        /// </summary>
+        public void CancelSpeakingAll()
+        {
+            var roomSpace = _roomSpaceProvider.CurrentRoomSpace.CurrentValue;
+            if (roomSpace == null) return;
+
+            var speaker = roomSpace.CurrentSpeaker.CurrentValue;
+            speaker?.CancelSpeakingAll();
+        }
 
 
         public void ChangeIdlePoseToCurrentSpeaker(IdlePose idlePose)

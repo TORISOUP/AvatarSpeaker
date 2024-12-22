@@ -19,7 +19,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
     /// </summary>
     public class VoicevoxSpeaker : VrmSpeaker
     {
-        private readonly CancellationTokenSource _cancellationTokenSource = new();
+        /// <summary>
+        /// このVoicevoxSpeakerが存在する限り使い続けるCancellationTokenSource
+        /// </summary>
+        private readonly CancellationTokenSource _allCts = new();
+
         private readonly ReactiveProperty<string> _currentSpeakingText = new("");
 
         private readonly UniTaskCompletionSource _onDisposeUniTaskCompletionSource = new();
@@ -30,6 +34,11 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
 
         private readonly VoicevoxProvider _voicevoxProvider;
         private readonly GameObject _vrmGameObject;
+
+        /// <summary>
+        /// 現在の読み上げのコンテキストにおいて使用されるCancellationTokenSource
+        /// </summary>
+        private CancellationTokenSource _currentSpeakingCts;
 
         public VoicevoxSpeaker(Vrm10Instance vrm10Instance, VoicevoxProvider provider)
         {
@@ -89,7 +98,7 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
                         _currentSpeakingText.Value = "";
                     }
                 })
-                .RegisterTo(_cancellationTokenSource.Token);
+                .RegisterTo(_allCts.Token);
         }
 
         // GameObjectのIDをSpeakerのIDとして利用
@@ -127,7 +136,10 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
         /// </summary>
         public override async UniTask SpeakAsync(string text, SpeakParameter speakParameter, CancellationToken ct)
         {
-            using var lcts = CancellationTokenSource.CreateLinkedTokenSource(ct, _cancellationTokenSource.Token);
+            _currentSpeakingCts ??= new CancellationTokenSource();
+
+            using var lcts =
+                CancellationTokenSource.CreateLinkedTokenSource(ct, _allCts.Token, _currentSpeakingCts.Token);
             var autoResetUniTaskCompletionSource = AutoResetUniTaskCompletionSource.Create();
 
             var synthesiser = _voicevoxProvider.Synthesizer.CurrentValue;
@@ -148,10 +160,22 @@ namespace AvatarSpeaker.Infrastructures.VoicevoxSpeakers
             await autoResetUniTaskCompletionSource.Task;
         }
 
+        /// <summary>
+        /// 現在の読み上げをキャンセルする
+        /// </summary>
+        public override void CancelSpeakingAll()
+        {
+            _currentSpeakingCts?.Cancel();
+            _currentSpeakingCts?.Dispose();
+            _currentSpeakingCts = null;
+        }
+
         protected override void OnDisposed()
         {
-            _cancellationTokenSource.Cancel();
-            _cancellationTokenSource.Dispose();
+            _currentSpeakingCts?.Cancel();
+            _currentSpeakingCts?.Dispose();
+            _allCts.Cancel();
+            _allCts.Dispose();
             _speechRegisterSubject.Dispose(true);
             _currentSpeakingText.Dispose();
 

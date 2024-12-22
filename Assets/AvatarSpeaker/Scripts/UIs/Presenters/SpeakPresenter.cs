@@ -28,6 +28,7 @@ namespace AvatarSpeaker.UIs.Presenters
         [SerializeField] private TMP_InputField _volumeInputField;
 
         [SerializeField] private Button _speakButton;
+        [SerializeField] private Button _cancelButton;
         private readonly Dictionary<TMP_Dropdown.OptionData, SpeakStyle> _styleMap = new();
 
         private SpeakerUseCase _speakerUseCase;
@@ -67,6 +68,12 @@ namespace AvatarSpeaker.UIs.Presenters
                     {
                         _speakButton.interactable = true;
                     }
+                });
+
+            _cancelButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
+                .Subscribe(_ =>
+                {
+                    _speakerUseCase.CancelSpeakingAll();
                 });
         }
 

@@ -80,6 +80,10 @@ namespace AvatarSpeaker.Core
         /// </summary>
         public abstract UniTask SpeakAsync(string text, SpeakParameter speakParameter, CancellationToken ct);
 
+        /// <summary>
+        /// 発話をすべてキャンセルする
+        /// </summary>
+        public abstract void CancelSpeakingAll();
 
         /// <summary>
         /// 現在のポーズを変更する
