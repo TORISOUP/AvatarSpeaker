@@ -1,5 +1,8 @@
 namespace AvatarSpeaker.Core.Models
 {
+    /// <summary>
+    /// Speakerのアニメーションポーズ
+    /// </summary>
     public enum IdlePose
     {
         Pose1,

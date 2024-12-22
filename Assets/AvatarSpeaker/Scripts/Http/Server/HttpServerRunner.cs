@@ -35,11 +35,13 @@ namespace AvatarSpeaker.Http.Server
 
         public void Start()
         {
+            // Controllerを登録
             foreach (var controller in _controllers)
             {
                 _currentHttpServer.RegisterController(controller);
             }
 
+            // 設定を監視してサーバーを起動/停止
             _configurationRepository
                 .HttpServerSettings
                 .Subscribe(x =>

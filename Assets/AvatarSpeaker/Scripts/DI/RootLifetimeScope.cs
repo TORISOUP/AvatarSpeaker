@@ -19,6 +19,9 @@ using VContainer.Unity;
 
 namespace AvatarSpeaker.DI
 {
+    /// <summary>
+    /// アプリケーション上で共通のLifetimeScope
+    /// </summary>
     public class RootLifetimeScope : LifetimeScope
     {
         [SerializeField] private SpeakerCameraView _speakerCameraView;
@@ -49,14 +52,16 @@ namespace AvatarSpeaker.DI
             builder.Register<VoicevoxSpeakStyleProvider>(Lifetime.Singleton).As<ISpeakStyleProvider>();
             builder.Register<VoicevoxVoiceController>(Lifetime.Singleton).As<IVoiceController>();
             builder.Register<VoicevoxSpeakerProvider>(Lifetime.Singleton).As<ISpeakerProvider, IDisposable>();
-            builder.Register<CurrentConfigurationRepository>(Lifetime.Singleton)
+            builder.Register<InMemoryConfigurationRepository>(Lifetime.Singleton)
                 .WithParameter(new VoiceControlConnectionSettings("http://localhost:50021"))
                 .WithParameter(new HttpServerSettings(21012, true))
                 .AsImplementedInterfaces();
             builder.Register<VoicevoxProvider>(Lifetime.Singleton).AsSelf().As<IDisposable>();
+            
             // SpeakerSource
             builder.Register<LocalSpeakerSourceProvider>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
+            
             // RoomSpace
             builder.Register<RoomSpaceProviderImpl>(Lifetime.Singleton)
                 .AsImplementedInterfaces();

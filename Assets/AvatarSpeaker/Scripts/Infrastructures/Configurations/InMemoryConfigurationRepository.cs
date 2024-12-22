@@ -4,9 +4,12 @@ using R3;
 
 namespace AvatarSpeaker.Infrastructures.Configurations
 {
-    public sealed class CurrentConfigurationRepository : IConfigurationRepository, IDisposable
+    /// <summary>
+    /// 現在の設定値をインメモリで保持するリポジトリ
+    /// </summary>
+    public sealed class InMemoryConfigurationRepository : IConfigurationRepository, IDisposable
     {
-        public CurrentConfigurationRepository(VoiceControlConnectionSettings voiceControlConnectionSettings,
+        public InMemoryConfigurationRepository(VoiceControlConnectionSettings voiceControlConnectionSettings,
             HttpServerSettings httpServerSettings)
         {
             VoiceControlConnectionSettings =

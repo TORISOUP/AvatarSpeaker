@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace AvatarSpeaker.UIs.Components
 {
+    /// <summary>
+    /// RGBの三色スライダー
+    /// </summary>
     public class ColorSliders : MonoBehaviour
     {
         [SerializeField] private Slider _redSlider;
@@ -20,8 +23,7 @@ namespace AvatarSpeaker.UIs.Components
         /// 現在の色
         /// </summary>
         public readonly ReactiveProperty<Color> Current = new(Color.white);
-
-
+        
         private void Start()
         {
             Current.Subscribe(v =>

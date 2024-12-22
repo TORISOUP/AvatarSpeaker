@@ -5,6 +5,7 @@ namespace AvatarSpeaker.Views.RoomSpaces
 {
     /// <summary>
     /// RoomSpaceに紐づくView
+    /// このView自体は現時点では何もしない
     /// </summary>
     public sealed class RoomSpaceView : MonoBehaviour
     {

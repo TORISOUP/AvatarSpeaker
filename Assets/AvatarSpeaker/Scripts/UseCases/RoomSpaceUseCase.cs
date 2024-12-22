@@ -70,6 +70,9 @@ namespace AvatarSpeaker.UseCases
             _speakerCameraUseCase.FocusOnCurrentSpeakerFace();
         }
 
+        /// <summary>
+        /// 背景色を変更する
+        /// </summary>
         public void ChangeBackgroundColor(Color color)
         {
             var roomSpace = CurrentRoomSpace;

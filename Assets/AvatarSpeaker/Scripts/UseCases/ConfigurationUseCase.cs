@@ -3,6 +3,9 @@ using R3;
 
 namespace AvatarSpeaker.UseCases
 {
+    /// <summary>
+    /// 設定関係のパラメータを扱うUseCase
+    /// </summary>
     public sealed class ConfigurationUseCase
     {
         private readonly IConfigurationRepository _configurationRepository;

@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace AvatarSpeaker.Views
 {
+    /// <summary>
+    /// VrmSpeakerを表示するView
+    /// </summary>
     public sealed class VrmSpeakerView : MonoBehaviour
     {
         private RuntimeAnimatorController _runtimeAnimatorController;

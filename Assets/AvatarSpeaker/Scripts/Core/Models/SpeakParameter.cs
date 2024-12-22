@@ -2,11 +2,29 @@ using System;
 
 namespace AvatarSpeaker.Core.Models
 {
+    /// <summary>
+    /// 発話パラメータ
+    /// </summary>
     public readonly struct SpeakParameter : IEquatable<SpeakParameter>
     {
+        /// <summary>
+        /// 発話スタイル
+        /// </summary>
         public SpeakStyle Style { get; }
+
+        /// <summary>
+        /// 読み上げ速度
+        /// </summary>
         public float SpeedScale { get; }
+
+        /// <summary>
+        /// ピッチ
+        /// </summary>
         public float PitchScale { get; }
+
+        /// <summary>
+        /// 音量
+        /// </summary>
         public float VolumeScale { get; }
 
         public static SpeakParameter Default => new(new SpeakStyle(0, "Default"), 1.0f, 0.0f, 1.0f);
@@ -60,6 +78,10 @@ namespace AvatarSpeaker.Core.Models
     }
 
 
+    /// <summary>
+    /// 発話スタイルを表す
+    /// （事実上、VOICEVOXのStyleIdに紐づく）
+    /// </summary>
     public readonly struct SpeakStyle : IEquatable<SpeakStyle>
     {
         public int Id { get; }

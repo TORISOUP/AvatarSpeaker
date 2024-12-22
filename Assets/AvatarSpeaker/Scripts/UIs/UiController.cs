@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace AvatarSpeaker.UIs
 {
+    /// <summary>
+    /// シーン内にあるUIs用のUIを制御する
+    /// </summary>
     public sealed class UiController : MonoBehaviour
     {
         [SerializeField] private Canvas _mainCanvas;

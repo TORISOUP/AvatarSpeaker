@@ -7,6 +7,10 @@ using VContainer;
 
 namespace AvatarSpeaker.UIs
 {
+    /// <summary>
+    /// キーボード入力を受け付ける
+    /// 「キー入力」もユーザーインタフェース関係なのでUIsに配置
+    /// </summary>
     public class KeyboardMouseInput : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 1.0f;

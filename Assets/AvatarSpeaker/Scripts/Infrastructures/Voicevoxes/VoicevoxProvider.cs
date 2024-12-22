@@ -24,6 +24,7 @@ namespace AvatarSpeaker.Infrastructures.Voicevoxes
             _synthesizer = new ReactiveProperty<VoicevoxSynthesizer>(synthesizer);
             _apiClient = new ReactiveProperty<IVoicevoxApiClient>(apiClient);
 
+            // VOICEVOXの接続設定が変更されたらクライアントを再生成する
             _disposable = configurationRepository.VoiceControlConnectionSettings.Subscribe(ChangeConnectionSettings);
         }
 
