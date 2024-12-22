@@ -1,9 +1,9 @@
 # AvatarSpeaker
 
-![app.gif](/img/app.gif)
-![1](/img/ss1.jpg)
-![2](/img/ss2.jpg)
-![3](/img/ss3.jpg)
+![app.gif](img/app.gif)
+![1](img/1.jpg)
+![2](img/2.jpg)
+![3](img/3.jpg)
 
 
 ## これは何
