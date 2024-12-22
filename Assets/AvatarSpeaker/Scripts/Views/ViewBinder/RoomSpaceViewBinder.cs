@@ -104,7 +104,7 @@ namespace AvatarSpeaker.Views.ViewBinder
             // UguiRoomSpaceBackgroundViewを生成
             // 背景の実装はいくつか考えられるが、今回は「uGUI実装版」を使うことにする
             var backgroundView = Object.Instantiate(_uguiRoomSpaceBackgroundViewPrefab);
-            backgroundView.Initalize(roomSpace, speakerCameraView.Camera);
+            backgroundView.Initialize(roomSpace, speakerCameraView.Camera);
 
             // RoomSpaceViewに登録
             roomSpaceView.Initalize(roomSpace, backgroundView, speakerCameraView);

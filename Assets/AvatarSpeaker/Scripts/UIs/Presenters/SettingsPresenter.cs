@@ -22,17 +22,14 @@ namespace AvatarSpeaker.UIs.Presenters
         [SerializeField] private Toggle _subtitlesToggle;
 
         private ConfigurationUseCase _configurationUseCase;
-        private SpeakerUseCase _speakerUseCase;
         private VoiceControlUseCase _voiceControlUseCase;
 
         [Inject]
         public void Inject(ConfigurationUseCase configurationUseCase,
-            VoiceControlUseCase voiceControlUseCase,
-            SpeakerUseCase speakerUseCase)
+            VoiceControlUseCase voiceControlUseCase)
         {
             _configurationUseCase = configurationUseCase;
             _voiceControlUseCase = voiceControlUseCase;
-            _speakerUseCase = speakerUseCase;
             SetUp();
         }
 

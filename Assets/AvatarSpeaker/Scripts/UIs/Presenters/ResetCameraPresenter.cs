@@ -1,6 +1,7 @@
 using AvatarSpeaker.UseCases;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
+using R3;
 using UnityEngine;
 using UnityEngine.UI;
 using VContainer;
@@ -18,7 +19,8 @@ namespace AvatarSpeaker.UIs.Presenters
         {
             _speakerCameraUseCase = speakerCameraUseCase;
 
-            _resetCameraButton.OnClickAsAsyncEnumerable(destroyCancellationToken)
+            _resetCameraButton
+                .OnClickAsAsyncEnumerable(destroyCancellationToken)
                 .Subscribe(_ => _speakerCameraUseCase.FocusOnCurrentSpeakerFace());
         }
     }

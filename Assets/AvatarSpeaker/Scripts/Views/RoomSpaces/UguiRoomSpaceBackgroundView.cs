@@ -20,7 +20,7 @@ namespace AvatarSpeaker.Views.RoomSpaces
             if (gameObject != null) Destroy(gameObject);
         }
 
-        public void Initalize(RoomSpace roomSpace, Camera worldCamera)
+        public void Initialize(RoomSpace roomSpace, Camera worldCamera)
         {
             _canvas.worldCamera = worldCamera;
             roomSpace

@@ -16,7 +16,7 @@ namespace AvatarSpeaker.UIs.Presenters
         {
             _colorSliders.Current.Value =
                 _roomSpaceUseCase.CurrentRoomSpace?.BackgroundColor.CurrentValue ?? Color.green;
-            _colorSliders.Current.Subscribe(c => { _roomSpaceUseCase.ChangeBackgroundColor(c); }).AddTo(this);
+            _colorSliders.Current.Subscribe(c => _roomSpaceUseCase.ChangeBackgroundColor(c)).AddTo(this);
         }
 
         [Inject]
