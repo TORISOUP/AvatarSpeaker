@@ -1,6 +1,10 @@
 # AvatarSpeaker
 
 ![app.gif](/img/app.gif)
+![1](/img/ss1.jpg)
+![2](/img/ss2.jpg)
+![3](/img/ss3.jpg)
+
 
 ## これは何
 
@@ -11,6 +15,8 @@
 ## アプリ利用者向け
 
 [Release](https://github.com/TORISOUP/AvatarSpeaker/releases/)ページより最新ビルドをダウンロードしてください。
+
+また[わんコメ](https://onecomme.com/)用のプラグインも同梱しているため、生放送のコメント読み上げに使う場合はこちらをご利用下さい。
 
 ## 開発者向け
 
