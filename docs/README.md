@@ -36,6 +36,41 @@
 
 NuGetパッケージが解決したら`Assets/AvatarSpeaker/RoomSpace`シーンを開いて実行してください。
 
+### REST API
+
+| Endpoint                                           | HTTP Method | 概要                              |
+|---------------------------------------------------|-------------|-----------------------------------|
+| `/api/v1/misc/speak_styles`                       | `GET`       | 使用可能なスタイルを取得する       |
+| `/api/v1/speakers/current/speak_current_parameters` | `POST`      | 現在の設定でテキストを発話する     |
+| `/api/v1/speakers/current/speak`                  | `POST`      | テキストを発話する                 |
+| `/api/v1/speakers/current/parameters`             | `GET`       | 現在の発話設定値を取得する             |
+| `/api/v1/speakers/current/parameters`             | `PUT`       | 現在の発話設定値を上書きする           |
+
+```sh
+curl -X POST \
+  http://your-api-domain/api/v1/speakers/current/speak_current_parameters \
+  -H "Content-Type: application/json" \
+  -d '{
+        "text": "こんにちは、これはテストです。"
+      }'
+```
+
+```sh
+curl -X POST \
+  http://your-api-domain/api/v1/speakers/current/speak \
+  -H "Content-Type: application/json" \
+  -d '{
+        "text": "こんにちは、これはテストです。",
+        "parameters": {
+          "style": 1,
+          "speedScale": 1.0,
+          "pitchScale": 0.0,
+          "volumeScale": 1.0
+        }
+      }'
+```
+
+
 ## 権利表記
 
 #### VoicevoxClientSharp
